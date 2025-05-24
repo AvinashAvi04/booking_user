@@ -1,11 +1,11 @@
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-import { FONTS } from '@/constants/fonts';
-import { ThemeProvider } from '@/theme/ThemeProvider';
-import { LogBox } from 'react-native';
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import "react-native-reanimated";
+import { FONTS } from "@/constants/fonts";
+import { ThemeProvider } from "@/theme/ThemeProvider";
+import { LogBox } from "react-native";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -53,9 +53,9 @@ export default function RootLayout() {
         <Stack.Screen name="forgotpasswordphonenumber" />
         <Stack.Screen name="login" />
         <Stack.Screen name="notifications" />
-        <Stack.Screen name="onboarding2" />
+        {/* <Stack.Screen name="onboarding2" />
         <Stack.Screen name="onboarding3" />
-        <Stack.Screen name="onboarding4" />
+        <Stack.Screen name="onboarding4" /> */}
         <Stack.Screen name="otpverification" />
         <Stack.Screen name="paymentmethods" />
         <Stack.Screen name="search" />
