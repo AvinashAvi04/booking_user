@@ -96,6 +96,10 @@ const styles = StyleSheet.create({
         fontFamily: 'regular',
         fontSize: 14,
         paddingTop: 0,
+        paddingBottom: 0,
+        lineHeight: 20,
+        height: '100%',
+        textAlignVertical: 'center',
     },
     errorContainer: {
         marginVertical: 4,

@@ -11,7 +11,7 @@ import Button from '../components/Button';
 import SocialButton from '../components/SocialButton';
 import OrSeparator from '../components/OrSeparator';
 import { useTheme } from '../theme/ThemeProvider';
-import { useNavigation } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 
 const isTestMode = true;
 
@@ -31,7 +31,9 @@ type Nav = {
     navigate: (value: string) => void
 }
 
+
 const Login = () => {
+    const router = useRouter();
     const { navigate } = useNavigation<Nav>();
     const [formState, dispatchFormState] = useReducer(reducer, initialState);
     const [error, setError] = useState(null);
@@ -125,7 +127,7 @@ const Login = () => {
                     <Button
                         title="Login"
                         filled
-                        onPress={() => navigate("(tabs)")}
+                        onPress={() => router.push("/enterpassword")}
                         style={styles.button}
                     />
                     <TouchableOpacity
