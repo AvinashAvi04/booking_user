@@ -14,9 +14,7 @@ import Button from '../components/Button';
 import RNPickerSelect from 'react-native-picker-select';
 import { useTheme } from '../theme/ThemeProvider';
 import { Image } from 'expo-image';
-import { useNavigation } from 'expo-router';
-import { NavigationProp } from '@react-navigation/native';
-
+import { useRouter } from 'expo-router';
 interface Item {
   flag: string;
   item: string;
@@ -47,7 +45,6 @@ const initialState = {
 
 // edit profile screen
 const EditProfile = () => {
-  const navigation = useNavigation<NavigationProp<any>>();
   const [image, setImage] = useState<any>(null);
   const [error, setError] = useState();
   const [formState, dispatchFormState] = useReducer(reducer, initialState);
@@ -57,6 +54,7 @@ const EditProfile = () => {
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
   const [selectedGender, setSelectedGender] = useState('');
   const { dark } = useTheme();
+  const router = useRouter();
 
   const genderOptions = [
     { label: 'Male', value: 'male' },
@@ -339,7 +337,14 @@ const EditProfile = () => {
           title="Update"
           filled
           style={styles.continueButton}
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            console.log('Update button pressed');
+            try {
+              router.replace('/login');
+            } catch (error) {
+              console.error('Navigation error:', error);
+            }
+          }}
         />
       </View>
     </SafeAreaView>

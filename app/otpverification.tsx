@@ -6,14 +6,12 @@ import { COLORS } from '../constants';
 import { OtpInput } from "react-native-otp-entry";
 import Button from "../components/Button";
 import { useTheme } from '../theme/ThemeProvider';
-import { useNavigation } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
-type Nav = {
-    navigate: (value: string) => void
-}
 
 const OTPVerification = () => {
-    const { navigate } = useNavigation<Nav>();
+    const params = useLocalSearchParams();
+    const router = useRouter();
     const [time, setTime] = useState(50);
     const { colors, dark } = useTheme();
 
@@ -34,7 +32,7 @@ const OTPVerification = () => {
                 <ScrollView>
                     <Text style={[styles.title, {
                         color: dark ? COLORS.white : COLORS.black
-                    }]}>Code has been send to +1 111 ******99</Text>
+                    }]}>Code has been send to {params.phone}</Text>
                     <OtpInput
                         numberOfDigits={4}
                         onTextChange={(text) => console.log(text)}
@@ -69,7 +67,7 @@ const OTPVerification = () => {
                     title="Verify"
                     filled
                     style={styles.button}
-                    onPress={() => { navigate("createnewpassword") }}
+                    onPress={() => router.push("/(tabs)")}
                 />
             </View>
         </SafeAreaView>

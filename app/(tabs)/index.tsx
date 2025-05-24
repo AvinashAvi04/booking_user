@@ -7,20 +7,29 @@ import { COLORS, icons, illustrations, SIZES } from '@/constants';
 import Button from '@/components/Button';
 import StarRating2 from '@/components/StarRating2';
 import { useTheme } from '@/theme/ThemeProvider';
-import { useNavigation } from 'expo-router';
-import { NavigationProp } from '@react-navigation/native';
+import { useFocusEffect, useRouter } from 'expo-router';
 
 const { width } = Dimensions.get("window");
 const CARD_HEIGHT = 112;
 const CARD_WIDTH = width * 0.85;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
+const isExistingUser = false;
+
 const Home = () => {
-  const navigation = useNavigation<NavigationProp<any>>();
   const [isFavourite, setIsFavourite] = useState(false);
   const [modalVisible, setModalVisible] = useState(true);
   const [directionModalVisible, setDirectionModalVisible] = useState(false);
   const { dark } = useTheme();
+  const router = useRouter();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (!isExistingUser) {
+        router.replace('/editprofile');
+      }
+    }, [isExistingUser])
+  );
 
   const initialMapState = {
     markers,
@@ -99,7 +108,7 @@ const Home = () => {
 
   const handleInputFocus = () => {
     // Redirect to another screen
-    navigation.navigate('search');
+    router.push('/search');
   };
 
   const renderDirectionModal = () => {

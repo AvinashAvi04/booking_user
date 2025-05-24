@@ -8,21 +8,17 @@ import {
   Platform,
   TouchableOpacity,
 } from "react-native";
-import { useRouter } from "expo-router";
-import { COLORS, SIZES, FONTS } from "../constants";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { COLORS, SIZES, FONTS, icons } from "../constants";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { useTheme } from "../theme/ThemeProvider";
 
-type PasswordScreenProps = {
-  isSignUp?: boolean;
-  email?: string;
-};
-
-const EnterPassword = ({
-  isSignUp = true,
-  email = "",
-}: PasswordScreenProps) => {
+const EnterPassword = () => {
+  const params = useLocalSearchParams();
+  
+  const phone = params.phone || '';
+  const existingUser = params.existingUser === "true";
   const router = useRouter();
   const { dark } = useTheme();
   const [password, setPassword] = useState("");
@@ -41,7 +37,7 @@ const EnterPassword = ({
       newErrors.password = ["Password must be at least 6 characters"];
     }
 
-    if (isSignUp) {
+    if (existingUser) {
       if (!confirmPassword) {
         newErrors.confirmPassword = ["Please confirm your password"];
       } else if (password !== confirmPassword) {
@@ -55,14 +51,17 @@ const EnterPassword = ({
 
   const handleSubmit = () => {
     if (validateForm()) {
-      // Handle form submission
-      if (isSignUp) {
-        console.log("Sign up with:", { email, password });
-        router.replace("/otpverification"); // Uncomment and adjust route as needed
-      } else {
-        console.log("Log in with:", { email, password });
-        // router.replace('/home'); // Uncomment and adjust route as needed
-      }
+      // For both signup and login, navigate to OTP verification
+      console.log(existingUser ? "Sign up with:" : "Log in with:", { phone, password });
+      
+      router.push({
+        pathname: "/otpverification",
+        params: {
+          phone: phone,
+          password: password,
+          existingUser: existingUser ? "true" : "false"
+        }
+      });
     }
   };
 
@@ -83,17 +82,12 @@ const EnterPassword = ({
           <Text
             style={[FONTS.h1, { color: dark ? COLORS.white : COLORS.black }]}
           >
-            {isSignUp ? "Create Password" : "Welcome Back!"}
+            {existingUser ? "Create Password" : "Welcome Back!"}
           </Text>
-          <Text
-            style={[
-              styles.subtitle,
-              { color: dark ? COLORS.gray : COLORS.gray2 },
-            ]}
-          >
-            {isSignUp
-              ? "Create a password to secure your account"
-              : "Enter your password to continue"}
+          <Text style={[styles.subtitle, { color: dark ? COLORS.gray : COLORS.gray2 }]}>
+            {existingUser
+              ? `Create a password to secure your account for ${phone}`
+              : `Welcome back! Please enter your password for ${phone}. You'll receive an OTP to verify.`}
           </Text>
         </View>
 
@@ -106,9 +100,11 @@ const EnterPassword = ({
             onInputChanged={(id, text) => setPassword(text)}
             errorText={errors.password}
             placeholderTextColor={dark ? COLORS.gray : COLORS.gray2}
+            icon={icons.padlock}
+            autoCapitalize="none"
           />
 
-          {isSignUp && (
+          {existingUser && (
             <Input
               id="confirmPassword"
               placeholder="Confirm Password"
@@ -117,12 +113,14 @@ const EnterPassword = ({
               onInputChanged={(id, text) => setConfirmPassword(text)}
               errorText={errors.confirmPassword}
               placeholderTextColor={dark ? COLORS.gray : COLORS.gray2}
+              icon={icons.padlock}
+              autoCapitalize="none"
               style={{ marginTop: SIZES.padding2 }}
             />
           )}
 
           <Button
-            title={isSignUp ? "Create Account" : "Sign In"}
+            title={existingUser ? "Create Account" : "Sign In"}
             onPress={handleSubmit}
             filled
             style={styles.button}

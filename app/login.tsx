@@ -23,6 +23,7 @@ import { useNavigation, useRouter } from "expo-router";
 
 const isTestMode = true;
 
+
 const initialState = {
   inputValues: {
     mobile: isTestMode ? "9999999999" : "",
@@ -63,9 +64,10 @@ const Login = () => {
     console.log("Form State Updated:", formState.inputValues.mobile);
   }, [formState]);
 
+  // Error handling is now silent
   useEffect(() => {
     if (error) {
-      Alert.alert("An error occured", error);
+      console.error(error);
     }
   }, [error]);
 
@@ -91,6 +93,37 @@ const Login = () => {
       validationResult: validateInput("mobile", ""),
     });
   }, []);
+
+  const isMobileValid = useCallback(() => {
+    const mobile = formState.inputValues.mobile;
+    return mobile && /^\d{10}$/.test(mobile);
+  }, [formState.inputValues.mobile]);
+
+  const handleLogin = () => {
+    if (!isMobileValid()) return;
+    
+    // Here you would typically make an API call to check if user exists
+    // For now, we'll assume user exists and navigate to enter password
+    let existingUser = false;
+
+    if (existingUser) {
+      router.push({
+        pathname: "/enterpassword",
+        params: {
+          mobile: formState.inputValues.mobile,
+          existingUser: "true"
+        }
+      });
+    } else {
+      router.push({
+        pathname: "/enterpassword",
+        params: {
+          mobile: formState.inputValues.mobile,
+          existingUser: "false"
+        }
+      });
+    }
+  };
 
   return (
     <SafeAreaView
@@ -131,14 +164,15 @@ const Login = () => {
           <Input
             id="mobile"
             onInputChanged={inputChangedHandler}
-            errorText={formState.inputValidities["mobile"]}
+            // errorText={formState.inputValidities["mobile"]}
             placeholder="Enter Your 10 Digit Mobile Number..."
             placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
             icon={icons.telephone}
             keyboardType="phone-pad"
             maxLength={10}
           />
-          {/* <Input
+          {/* Password input is commented out for now
+          <Input
             onInputChanged={inputChangedHandler}
             errorText={formState.inputValidities["password"]}
             autoCapitalize="none"
@@ -166,19 +200,12 @@ const Login = () => {
           <Button
             title="Login"
             filled
-            onPress={() => {
-              const mobile = formState.inputValues.mobile;
-              if (/^\d{10}$/.test(mobile)) {
-                router.push("/enterpassword");
-              }
-              //   else {
-              //     Alert.alert(
-              //       "Invalid Mobile Number",
-              //       "Please enter a valid 10 digit mobile number."
-              //     );
-              //   }
-            }}
-            style={styles.button}
+            onPress={handleLogin}
+            style={[
+              styles.button,
+              !isMobileValid() && { opacity: 0.7 }
+            ]}
+            disabled={!isMobileValid()}
           />
           {/* <TouchableOpacity onPress={() => navigate("forgotpasswordmethods")}>
             <Text style={styles.forgotPasswordBtnText}>
