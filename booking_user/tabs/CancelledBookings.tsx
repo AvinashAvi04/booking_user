@@ -1,0 +1,340 @@
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from 'react';
+import { COLORS, SIZES, icons } from '../constants';
+import { cancelledBookings } from '../data';
+import { useTheme } from '../theme/ThemeProvider';
+
+const CancelledBookings = () => {
+  const { dark } = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <View style={[styles.container, {
+      backgroundColor: dark ? COLORS.dark1 : COLORS.tertiaryWhite
+    }]}>
+      <FlatList
+        data={cancelledBookings}
+        keyExtractor={item => item.id}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => {
+          return (
+            <View style={[styles.cardContainer, {
+              backgroundColor: dark ? COLORS.dark2 : COLORS.white
+            }]}>
+              {/* Driver infor */}
+              <View style={styles.topCardContainer}>
+                <View style={styles.topCardLeftContainer}>
+                  <TouchableOpacity>
+                    <Image
+                      source={item.avatar}
+                      resizeMode='cover'
+                      style={styles.avatar}
+                    />
+                  </TouchableOpacity>
+                  <View>
+                    <Text style={[styles.name, {
+                      color: dark ? COLORS.secondaryWhite : COLORS.greyscale900
+                    }]}>{item.name}</Text>
+                    <Text style={[styles.taxi, {
+                      color: dark ? COLORS.grayscale200 : COLORS.grayscale700
+                    }]}>{item.taxi}</Text>
+                  </View>
+                </View>
+                <View style={styles.topCardRightContainer}>
+                  <View style={styles.statusContainer}>
+                    <Text style={styles.status}>{item.status}</Text>
+                  </View>
+                  <Text style={[styles.taxiID, {
+                    color: dark ? COLORS.white : COLORS.greyscale900
+                  }]}>{item.taxiID}</Text>
+                </View>
+              </View>
+
+              <View style={[styles.separateLine, {
+                backgroundColor: dark ? COLORS.grayscale700 : COLORS.grayscale200,
+              }]} />
+
+              {
+                isOpen && (
+                  <>
+                    {/* Timing information for route */}
+                    <View style={styles.routeContainer}>
+                      <View style={styles.topRouteContainer}>
+                        <View style={styles.routeIconContainer}>
+                          <Image
+                            source={icons.location2Outline}
+                            resizeMode='contain'
+                            style={styles.routeIcon}
+                          />
+                          <Text style={[styles.routeName, {
+                            color: dark ? COLORS.white : COLORS.greyscale900
+                          }]}>{item.distance}</Text>
+                        </View>
+                        <View style={styles.routeIconContainer}>
+                          <Image
+                            source={icons.clock}
+                            resizeMode='contain'
+                            style={styles.routeIcon}
+                          />
+                          <Text style={[styles.routeName, {
+                            color: dark ? COLORS.white : COLORS.greyscale900
+                          }]}>{item.duration}</Text>
+                        </View>
+                        <View style={styles.routeIconContainer}>
+                          <Image
+                            source={icons.wallet2Outline}
+                            resizeMode='contain'
+                            style={styles.routeIcon}
+                          />
+                          <Text style={[styles.routeName, {
+                            color: dark ? COLORS.white : COLORS.greyscale900
+                          }]}>{item.price}</Text>
+                        </View>
+                      </View>
+                      <View style={styles.bottomRouteContainer}>
+                        <Text style={[styles.bottomRouteName, {
+                          color: dark ? COLORS.white : COLORS.greyscale900
+                        }]}>Date & Time</Text>
+                        <Text style={[styles.date, {
+                          color: dark ? COLORS.white : COLORS.greyscale900
+                        }]}>{item.date} | {item.time}</Text>
+                      </View>
+                    </View>
+
+                    <View style={[styles.separateLine, {
+                      backgroundColor: dark ? COLORS.grayscale700 : COLORS.grayscale200,
+                    }]} />
+
+                    {/* Location information for route */}
+                    <View>
+                      <View style={styles.locationItemContainer}>
+                        <View style={styles.locationIcon1}>
+                          <View style={styles.locationIcon2}>
+                            <Image
+                              source={icons.crosshair}
+                              resizeMode='contain'
+                              style={styles.locationIcon3}
+                            />
+                          </View>
+                        </View>
+                        <View>
+                          <Text style={[styles.baseLocationName, {
+                            color: dark ? COLORS.white : COLORS.greyscale900
+                          }]}>
+                            {item.baseLocationName}
+                          </Text>
+                          <Text style={[styles.baseLocationAddress, {
+                            color: dark ? COLORS.white : COLORS.greyScale800
+                          }]}>
+                            {item.baseLocationAddress}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={styles.locationItemContainer}>
+                        <View style={styles.locationIcon1}>
+                          <View style={styles.locationIcon2}>
+                            <Image
+                              source={icons.location2}
+                              resizeMode='contain'
+                              style={styles.locationIcon3}
+                            />
+                          </View>
+                        </View>
+                        <View>
+                          <Text style={[styles.baseLocationName, {
+                            color: dark ? COLORS.white : COLORS.greyscale900
+                          }]}>
+                            {item.destinationLocationName}
+                          </Text>
+                          <Text style={[styles.baseLocationAddress, {
+                            color: dark ? COLORS.white : COLORS.greyScale800
+                          }]}>
+                            {item.destinationLocationAddress}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </>
+                )
+              }
+              <TouchableOpacity
+                onPress={() => setIsOpen(!isOpen)}
+                style={styles.arrowIconContainer}>
+                <Image
+                  source={isOpen ? icons.arrowUp : icons.arrowDown}
+                  resizeMode="contain"
+                  style={[styles.arrowIcon, {
+                    tintColor: dark ? COLORS.white : COLORS.greyscale900
+                  }]}
+                />
+              </TouchableOpacity>
+            </View>
+          )
+        }}
+      />
+    </View>
+  )
+};
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: COLORS.tertiaryWhite,
+    paddingTop: 16
+  },
+  cardContainer: {
+    width: SIZES.width - 32,
+    backgroundColor: COLORS.white,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 32,
+    marginBottom: 12
+  },
+  topCardContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  topCardLeftContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 6
+  },
+  avatar: {
+    width: 52,
+    height: 52,
+    borderRadius: 999,
+    marginRight: 12
+  },
+  name: {
+    fontFamily: "bold",
+    fontSize: 16,
+    color: COLORS.greyscale900,
+    marginBottom: 8
+  },
+  taxi: {
+    fontFamily: "regular",
+    fontSize: 12,
+    color: COLORS.grayscale700,
+  },
+  topCardRightContainer: {
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    alignItems: "flex-end"
+  },
+  statusContainer: {
+    width: 64,
+    height: 24,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 6,
+    backgroundColor: COLORS.red
+  },
+  status: {
+    fontFamily: "medium",
+    fontSize: 10,
+    color: COLORS.white
+  },
+  taxiID: {
+    fontFamily: "semiBold",
+    fontSize: 12,
+    color: COLORS.greyscale900,
+    marginTop: 6
+  },
+  separateLine: {
+    height: 1,
+    backgroundColor: COLORS.grayscale200,
+    width: "100%",
+    marginTop: 12
+  },
+  routeContainer: {
+
+  },
+  topRouteContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginTop: 12
+  },
+  routeIconContainer: {
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  routeIcon: {
+    width: 24,
+    height: 24,
+    tintColor: COLORS.grayscale400,
+    marginRight: 8
+  },
+  routeName: {
+    fontSize: 14,
+    color: COLORS.greyscale900,
+    fontFamily: "semiBold",
+  },
+  bottomRouteContainer: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+    marginTop: 16
+  },
+  bottomRouteName: {
+    fontSize: 12,
+    color: COLORS.greyscale900,
+    fontFamily: "regular",
+  },
+  date: {
+    fontSize: 14,
+    color: COLORS.greyscale900,
+    fontFamily: "semiBold",
+  },
+  locationItemContainer: {
+    flexDirection: "row",
+    width: "100%",
+    marginVertical: 12,
+    alignItems: "center"
+  },
+  locationIcon1: {
+    height: 52,
+    width: 52,
+    borderRadius: 999,
+    marginRight: 12,
+    backgroundColor: "rgba(254, 187, 27, 0.3)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  locationIcon2: {
+    height: 36,
+    width: 36,
+    borderRadius: 999,
+    backgroundColor: COLORS.primary,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  locationIcon3: {
+    width: 16,
+    height: 16,
+    tintColor: COLORS.black
+  },
+  baseLocationName: {
+    fontSize: 17,
+    color: COLORS.greyscale900,
+    fontFamily: "bold",
+  },
+  baseLocationAddress: {
+    fontSize: 14,
+    color: COLORS.greyScale800,
+    fontFamily: "regular",
+    marginTop: 8
+  },
+  arrowIconContainer: {
+    width: "100%",
+    alignItems: "center",
+    marginTop: 12
+  },
+  arrowIcon: {
+    height: 18,
+    width: 18,
+    tintColor: COLORS.black
+  }
+})
+
+export default CancelledBookings
