@@ -15,6 +15,11 @@ export const validateInput = (inputId: string, inputValue: string) => {
     return isValid ? null : "Enter a valid 10 digit mobile number";
   }
 
+  if (inputId === "aadharNumber") {
+    const isValid = /^\d{12}$/.test(inputValue);
+    return isValid ? null : "Enter a valid valid aadhar number";
+  }
+
   if (
     inputId === "fullName" ||
     inputId === "firstName" ||
@@ -32,7 +37,8 @@ export const validateInput = (inputId: string, inputValue: string) => {
     inputId === "about" ||
     inputId === "creditCardHolderName" ||
     inputId === "addressLine1" ||
-    inputId === "addressLine2"
+    inputId === "addressLine2" ||
+    inputId === "aadharNumber"
   ) {
     return validateString(inputId, inputValue);
   } else if (

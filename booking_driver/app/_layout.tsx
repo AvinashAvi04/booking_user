@@ -74,6 +74,12 @@ export default function RootLayout() {
         <Stack.Screen name="transactionhistory" />
         <Stack.Screen name="welcome" />
         <Stack.Screen name="(tabs)" />
+
+        {/* new  */}
+        <Stack.Screen name="otpverification_kyc" />
+        <Stack.Screen name="upload_driving_licence" />
+        <Stack.Screen name="add_vehicle" />
+
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
