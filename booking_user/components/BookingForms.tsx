@@ -113,7 +113,7 @@ export const OneWayForm = () => {
           filled
           style={{ marginTop: 24 }}
           onPress={() => {
-            navigator.navigate("inbox");
+            navigator.navigate("pricediscussion");
           }}
         />
         <DatePickerModal
@@ -205,7 +205,7 @@ export const RoundTripForm = () => {
           filled
           style={{ marginTop: 24 }}
           onPress={() => {
-            navigator.navigate("inbox");
+            navigator.navigate("pricediscussion");
           }}
         />
         <DatePickerModal
@@ -274,7 +274,7 @@ export const LocalForm = () => {
           filled
           style={{ marginTop: 24 }}
           onPress={() => {
-            navigator.navigate("inbox");
+            navigator.navigate("pricediscussion");
           }}
         />
         <DatePickerModal
@@ -406,7 +406,7 @@ export const AirportForm = () => {
           filled
           style={{ marginTop: 24 }}
           onPress={() => {
-            navigator.navigate("inbox");
+            navigator.navigate("pricediscussion");
           }}
         />
         <DatePickerModal

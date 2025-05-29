@@ -6,7 +6,7 @@ import {
   Image,
   Alert,
   TouchableOpacity,
-  Keyboard
+  Keyboard,
 } from "react-native";
 import React, { useCallback, useEffect, useReducer, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -102,7 +102,7 @@ const Login = () => {
   }, [formState.inputValues.mobile]);
 
   const handleLogin = () => {
-    Keyboard.dismiss()
+    Keyboard.dismiss();
     if (!isMobileValid()) return;
     router.push("/otpverification");
   };
@@ -126,8 +126,9 @@ const Login = () => {
       >
         {/* <Header title="" /> */}
         <ScrollView
-        keyboardShouldPersistTaps='handled' 
-        showsVerticalScrollIndicator={false}>
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.logoContainer}>
             <Image
               source={images.logo}
@@ -148,7 +149,9 @@ const Login = () => {
           <Input
             id="mobile"
             onInputChanged={inputChangedHandler}
-            errorText={mobileTouched ? formState.inputValidities.mobile : undefined}
+            errorText={
+              mobileTouched ? formState.inputValidities.mobile : undefined
+            }
             placeholder="Enter Your 10 Digit Mobile Number..."
             placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
             icon={icons.telephone}
@@ -163,8 +166,18 @@ const Login = () => {
             disabled={!isMobileValid()}
           />
         </ScrollView>
-        <TouchableOpacity onPress={() => router.replace('/emaillogin')} style={{ alignSelf: 'center', marginBottom: 24 }}>
-          <Text style={{ color: COLORS.primary, fontSize: 18, fontFamily: 'medium', textDecorationLine: 'underline'}}>
+        <TouchableOpacity
+          onPress={() => router.replace("/emaillogin")}
+          style={{ alignSelf: "center", marginBottom: 8 }}
+        >
+          <Text
+            style={{
+              color: COLORS.primary,
+              fontSize: 18,
+              fontFamily: "medium",
+              textDecorationLine: "underline",
+            }}
+          >
             Login using Email
           </Text>
         </TouchableOpacity>

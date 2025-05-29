@@ -1,12 +1,19 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
-import React, { useState } from 'react';
-import { COLORS, SIZES, FONTS, icons } from '../constants';
-import { activeBookings } from '../data';
-import MapView, { Marker, Callout } from 'react-native-maps';
-import { mapDarkStyle, mapStandardStyle } from '../data/mapData';
-import { useTheme } from '../theme/ThemeProvider';
-import { useNavigation } from 'expo-router';
-import { NavigationProp } from '@react-navigation/native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import React, { useState } from "react";
+import { COLORS, SIZES, FONTS, icons } from "../constants";
+import { activeBookings } from "../data";
+import MapView, { Marker, Callout } from "react-native-maps";
+import { mapDarkStyle, mapStandardStyle } from "../data/mapData";
+import { useTheme } from "../theme/ThemeProvider";
+import { useNavigation } from "expo-router";
+import { NavigationProp } from "@react-navigation/native";
 
 const ActiveBookings = () => {
   const { dark } = useTheme();
@@ -14,228 +21,343 @@ const ActiveBookings = () => {
   const navigation = useNavigation<NavigationProp<any>>();
 
   return (
-    <View style={[styles.container, {
-      backgroundColor: dark ? COLORS.dark1 : COLORS.tertiaryWhite
-    }]}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: dark ? COLORS.dark1 : COLORS.tertiaryWhite,
+        },
+      ]}
+    >
       <FlatList
         data={activeBookings}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => {
           return (
-            <View style={[styles.cardContainer, {
-              backgroundColor: dark ? COLORS.dark2 : COLORS.white,
-            }]}>
+            <View
+              style={[
+                styles.cardContainer,
+                {
+                  backgroundColor: dark ? COLORS.dark2 : COLORS.white,
+                },
+              ]}
+            >
               {/* Driver infor */}
               <View style={styles.topCardContainer}>
                 <View style={styles.topCardLeftContainer}>
                   <TouchableOpacity>
-                    <Image
+                    {/* <Image
                       source={item.avatar}
                       resizeMode='cover'
                       style={styles.avatar}
-                    />
+                    /> */}
                   </TouchableOpacity>
                   <View>
-                    <Text style={[styles.name, {
-                      color: dark ? COLORS.secondaryWhite : COLORS.greyscale900
-                    }]}>{item.name}</Text>
-                    <Text style={[styles.taxi, {
-                      color: dark ? COLORS.grayscale200 : COLORS.grayscale700
-                    }]}>{item.taxi}</Text>
+                    <Text
+                      style={[
+                        styles.name,
+                        {
+                          color: dark
+                            ? COLORS.secondaryWhite
+                            : COLORS.greyscale900,
+                        },
+                      ]}
+                    >
+                      {item.name}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.taxi,
+                        {
+                          color: dark
+                            ? COLORS.grayscale200
+                            : COLORS.grayscale700,
+                        },
+                      ]}
+                    >
+                      {item.taxi}
+                    </Text>
                   </View>
                 </View>
                 <View style={styles.topCardRightContainer}>
                   <View style={styles.statusContainer}>
-                    <Text style={styles.status}>{item.status}</Text>
+                    <TouchableOpacity>
+                      <Text style={styles.status}>{item.status}</Text>
+                    </TouchableOpacity>
                   </View>
-                  <Text style={[styles.taxiID, {
-                    color: dark ? COLORS.white : COLORS.greyscale900
-                  }]}>{item.taxiID}</Text>
+                  <Text
+                    style={[
+                      styles.taxiID,
+                      {
+                        color: dark ? COLORS.white : COLORS.greyscale900,
+                      },
+                    ]}
+                  >
+                    {item.taxiID}
+                  </Text>
                 </View>
               </View>
 
-              <View style={[styles.separateLine, {
-                backgroundColor: dark ? COLORS.grayscale700 : COLORS.grayscale200,
-              }]} />
+              <View
+                style={[
+                  styles.separateLine,
+                  {
+                    backgroundColor: dark
+                      ? COLORS.grayscale700
+                      : COLORS.grayscale200,
+                  },
+                ]}
+              />
 
-              {
-                isOpen && (
-                  <>
-                    {/* Timing information for route */}
-                    <View style={styles.routeContainer}>
-                      <View style={styles.topRouteContainer}>
-                        <View style={styles.routeIconContainer}>
-                          <Image
-                            source={icons.location2Outline}
-                            resizeMode='contain'
-                            style={styles.routeIcon}
-                          />
-                          <Text style={[styles.routeName, {
-                            color: dark ? COLORS.white : COLORS.greyscale900
-                          }]}>{item.distance}</Text>
-                        </View>
-                        <View style={styles.routeIconContainer}>
-                          <Image
-                            source={icons.clock}
-                            resizeMode='contain'
-                            style={styles.routeIcon}
-                          />
-                          <Text style={[styles.routeName, {
-                            color: dark ? COLORS.white : COLORS.greyscale900
-                          }]}>{item.duration}</Text>
-                        </View>
-                        <View style={styles.routeIconContainer}>
-                          <Image
-                            source={icons.wallet2Outline}
-                            resizeMode='contain'
-                            style={styles.routeIcon}
-                          />
-                          <Text style={[styles.routeName, {
-                            color: dark ? COLORS.white : COLORS.greyscale900
-                          }]}>{item.price}</Text>
-                        </View>
-                      </View>
-                      <View style={styles.bottomRouteContainer}>
-                        <Text style={[styles.bottomRouteName, {
-                          color: dark ? COLORS.white : COLORS.greyscale900
-                        }]}>Date & Time</Text>
-                        <Text style={[styles.date, {
-                          color: dark ? COLORS.white : COLORS.greyscale900
-                        }]}>{item.date} | {item.time}</Text>
-                      </View>
-                    </View>
-
-                    <View style={[styles.separateLine, {
-                      backgroundColor: dark ? COLORS.grayscale700 : COLORS.grayscale200,
-                    }]} />
-
-                    {/* Location information for route */}
-                    <View>
-                      <View style={styles.locationItemContainer}>
-                        <View style={styles.locationIcon1}>
-                          <View style={styles.locationIcon2}>
-                            <Image
-                              source={icons.crosshair}
-                              resizeMode='contain'
-                              style={styles.locationIcon3}
-                            />
-                          </View>
-                        </View>
-                        <View>
-                          <Text style={[styles.baseLocationName, {
-                            color: dark ? COLORS.white : COLORS.greyscale900
-                          }]}>
-                            {item.baseLocationName}
-                          </Text>
-                          <Text style={[styles.baseLocationAddress, {
-                            color: dark ? COLORS.white : COLORS.greyScale800
-                          }]}>
-                            {item.baseLocationAddress}
-                          </Text>
-                        </View>
-                      </View>
-                      <View style={styles.locationItemContainer}>
-                        <View style={styles.locationIcon1}>
-                          <View style={styles.locationIcon2}>
-                            <Image
-                              source={icons.location2}
-                              resizeMode='contain'
-                              style={styles.locationIcon3}
-                            />
-                          </View>
-                        </View>
-                        <View>
-                          <Text style={[styles.baseLocationName, {
-                            color: dark ? COLORS.white : COLORS.greyscale900
-                          }]}>
-                            {item.destinationLocationName}
-                          </Text>
-                          <Text style={[styles.baseLocationAddress, {
-                            color: dark ? COLORS.white : COLORS.greyScale800
-                          }]}>
-                            {item.destinationLocationAddress}
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-
-                    {/* Location map for route */}
-                    <View style={[styles.locationMapContainer, {
-                      backgroundColor: dark ? COLORS.dark1 : COLORS.white,
-                    }]}>
-                      <MapView
-                        style={styles.mapContainer}
-                        customMapStyle={dark ? mapDarkStyle : mapStandardStyle}
-                        userInterfaceStyle="dark"
-                        initialRegion={{
-                          latitude: 48.8566,
-                          longitude: 2.3522,
-                          latitudeDelta: 0.0922,
-                          longitudeDelta: 0.0421,
-                        }}>
-                        <Marker
-                          coordinate={{
-                            latitude: item.destinationLocationLat,
-                            longitude: item.destinationLocationLong,
-                          }}
-                          image={icons.location2}
-                          title="Move"
-                          description="Address"
-                          onPress={() => console.log("Move to another screen")}
+              {isOpen && (
+                <>
+                  {/* Timing information for route */}
+                  <View style={styles.routeContainer}>
+                    <View style={styles.topRouteContainer}>
+                      <View style={styles.routeIconContainer}>
+                        <Image
+                          source={icons.location2Outline}
+                          resizeMode="contain"
+                          style={styles.routeIcon}
+                        />
+                        <Text
+                          style={[
+                            styles.routeName,
+                            {
+                              color: dark ? COLORS.white : COLORS.greyscale900,
+                            },
+                          ]}
                         >
-                          <Callout tooltip>
-                            <View>
-                              <View style={styles.bubble}>
-                                <Text
-                                  style={{
-                                    ...FONTS.body4,
-                                    fontWeight: 'bold',
-                                    color: COLORS.black,
-                                  }}
-                                >
-                                  User Address
-                                </Text>
-                              </View>
-                              <View style={styles.arrowBorder} />
-                              <View style={styles.arrow} />
-                            </View>
-                          </Callout>
-                        </Marker>
-                      </MapView>
+                          {item.distance}
+                        </Text>
+                      </View>
+                      <View style={styles.routeIconContainer}>
+                        <Image
+                          source={icons.clock}
+                          resizeMode="contain"
+                          style={styles.routeIcon}
+                        />
+                        <Text
+                          style={[
+                            styles.routeName,
+                            {
+                              color: dark ? COLORS.white : COLORS.greyscale900,
+                            },
+                          ]}
+                        >
+                          {item.duration}
+                        </Text>
+                      </View>
+                      <View style={styles.routeIconContainer}>
+                        <Image
+                          source={icons.wallet2Outline}
+                          resizeMode="contain"
+                          style={styles.routeIcon}
+                        />
+                        <Text
+                          style={[
+                            styles.routeName,
+                            {
+                              color: dark ? COLORS.white : COLORS.greyscale900,
+                            },
+                          ]}
+                        >
+                          {item.price}
+                        </Text>
+                      </View>
                     </View>
+                    <View style={styles.bottomRouteContainer}>
+                      <Text
+                        style={[
+                          styles.bottomRouteName,
+                          {
+                            color: dark ? COLORS.white : COLORS.greyscale900,
+                          },
+                        ]}
+                      >
+                        Date & Time
+                      </Text>
+                      <Text
+                        style={[
+                          styles.date,
+                          {
+                            color: dark ? COLORS.white : COLORS.greyscale900,
+                          },
+                        ]}
+                      >
+                        {item.date} | {item.time}
+                      </Text>
+                    </View>
+                  </View>
 
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate("cancelbooking")}
-                      style={styles.cancelBtn}>
-                      <Text style={styles.cancelBtnText}>Cancel Booking</Text>
-                    </TouchableOpacity>
-                  </>
-                )
-              }
+                  <View
+                    style={[
+                      styles.separateLine,
+                      {
+                        backgroundColor: dark
+                          ? COLORS.grayscale700
+                          : COLORS.grayscale200,
+                      },
+                    ]}
+                  />
+
+                  {/* Location information for route */}
+                  <View>
+                    <View style={styles.locationItemContainer}>
+                      <View style={styles.locationIcon1}>
+                        <View style={styles.locationIcon2}>
+                          <Image
+                            source={icons.crosshair}
+                            resizeMode="contain"
+                            style={styles.locationIcon3}
+                          />
+                        </View>
+                      </View>
+                      <View>
+                        <Text
+                          style={[
+                            styles.baseLocationName,
+                            {
+                              color: dark ? COLORS.white : COLORS.greyscale900,
+                            },
+                          ]}
+                        >
+                          {item.baseLocationName}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.baseLocationAddress,
+                            {
+                              color: dark ? COLORS.white : COLORS.greyScale800,
+                            },
+                          ]}
+                        >
+                          {item.baseLocationAddress}
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={styles.locationItemContainer}>
+                      <View style={styles.locationIcon1}>
+                        <View style={styles.locationIcon2}>
+                          <Image
+                            source={icons.location2}
+                            resizeMode="contain"
+                            style={styles.locationIcon3}
+                          />
+                        </View>
+                      </View>
+                      <View>
+                        <Text
+                          style={[
+                            styles.baseLocationName,
+                            {
+                              color: dark ? COLORS.white : COLORS.greyscale900,
+                            },
+                          ]}
+                        >
+                          {item.destinationLocationName}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.baseLocationAddress,
+                            {
+                              color: dark ? COLORS.white : COLORS.greyScale800,
+                            },
+                          ]}
+                        >
+                          {item.destinationLocationAddress}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+
+                  {/* Location map for route */}
+                  {/* <View
+                    style={[
+                      styles.locationMapContainer,
+                      {
+                        backgroundColor: dark ? COLORS.dark1 : COLORS.white,
+                      },
+                    ]}
+                  >
+                    <MapView
+                      style={styles.mapContainer}
+                      customMapStyle={dark ? mapDarkStyle : mapStandardStyle}
+                      userInterfaceStyle="dark"
+                      initialRegion={{
+                        latitude: 48.8566,
+                        longitude: 2.3522,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                      }}
+                    >
+                      <Marker
+                        coordinate={{
+                          latitude: item.destinationLocationLat,
+                          longitude: item.destinationLocationLong,
+                        }}
+                        image={icons.location2}
+                        title="Move"
+                        description="Address"
+                        onPress={() => console.log("Move to another screen")}
+                      >
+                        <Callout tooltip>
+                          <View>
+                            <View style={styles.bubble}>
+                              <Text
+                                style={{
+                                  ...FONTS.body4,
+                                  fontWeight: "bold",
+                                  color: COLORS.black,
+                                }}
+                              >
+                                User Address
+                              </Text>
+                            </View>
+                            <View style={styles.arrowBorder} />
+                            <View style={styles.arrow} />
+                          </View>
+                        </Callout>
+                      </Marker>
+                    </MapView>
+                  </View> */}
+
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("cancelbooking")}
+                    style={styles.cancelBtn}
+                  >
+                    <Text style={styles.cancelBtnText}>Cancel Booking</Text>
+                  </TouchableOpacity>
+                </>
+              )}
               <TouchableOpacity
                 onPress={() => setIsOpen(!isOpen)}
-                style={styles.arrowIconContainer}>
+                style={styles.arrowIconContainer}
+              >
                 <Image
                   source={isOpen ? icons.arrowUp : icons.arrowDown}
                   resizeMode="contain"
-                  style={[styles.arrowIcon, {
-                    tintColor: dark ? COLORS.white : COLORS.greyscale900
-                  }]}
+                  style={[
+                    styles.arrowIcon,
+                    {
+                      tintColor: dark ? COLORS.white : COLORS.greyscale900,
+                    },
+                  ]}
                 />
               </TouchableOpacity>
             </View>
-          )
+          );
         }}
       />
     </View>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.tertiaryWhite,
-    marginTop: 12
+    marginTop: 12,
   },
   cardContainer: {
     width: SIZES.width - 32,
@@ -243,29 +365,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 32,
-    marginBottom: 12
+    marginBottom: 12,
   },
   topCardContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
+    // marginTop: 100,
   },
   topCardLeftContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 6
+    marginTop: 6,
   },
   avatar: {
     width: 52,
     height: 52,
     borderRadius: 999,
-    marginRight: 12
+    marginRight: 12,
   },
   name: {
     fontFamily: "bold",
     fontSize: 16,
     color: COLORS.greyscale900,
-    marginBottom: 8
+    marginBottom: 8,
   },
   taxi: {
     fontFamily: "regular",
@@ -275,7 +398,7 @@ const styles = StyleSheet.create({
   topCardRightContainer: {
     flexDirection: "column",
     justifyContent: "flex-end",
-    alignItems: "flex-end"
+    alignItems: "flex-end",
   },
   statusContainer: {
     width: 54,
@@ -283,43 +406,41 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 6,
-    backgroundColor: COLORS.primary
+    backgroundColor: COLORS.primary,
   },
   status: {
     fontFamily: "regular",
     fontSize: 10,
-    color: COLORS.black
+    color: COLORS.black,
   },
   taxiID: {
     fontFamily: "semiBold",
     fontSize: 12,
     color: COLORS.greyscale900,
-    marginTop: 6
+    marginTop: 6,
   },
   separateLine: {
     height: 1,
     backgroundColor: COLORS.grayscale200,
     width: "100%",
-    marginTop: 12
+    marginTop: 12,
   },
-  routeContainer: {
-
-  },
+  routeContainer: {},
   topRouteContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    marginTop: 12
+    marginTop: 12,
   },
   routeIconContainer: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   routeIcon: {
     width: 24,
     height: 24,
     tintColor: COLORS.grayscale400,
-    marginRight: 8
+    marginRight: 8,
   },
   routeName: {
     fontSize: 14,
@@ -330,7 +451,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     justifyContent: "space-between",
-    marginTop: 16
+    marginTop: 16,
   },
   bottomRouteName: {
     fontSize: 12,
@@ -346,7 +467,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     marginVertical: 12,
-    alignItems: "center"
+    alignItems: "center",
   },
   locationIcon1: {
     height: 52,
@@ -368,7 +489,7 @@ const styles = StyleSheet.create({
   locationIcon3: {
     width: 16,
     height: 16,
-    tintColor: COLORS.black
+    tintColor: COLORS.black,
   },
   baseLocationName: {
     fontSize: 17,
@@ -379,19 +500,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.greyScale800,
     fontFamily: "regular",
-    marginTop: 8
+    marginTop: 8,
   },
   locationMapContainer: {
     height: 160,
     width: "100%",
     borderRadius: 12,
-    marginVertical: 16
+    marginVertical: 16,
   },
   mapContainer: {
     ...StyleSheet.absoluteFillObject,
     flex: 1,
     borderRadius: 12,
-    backgroundColor: COLORS.dark2
+    backgroundColor: COLORS.dark2,
   },
   viewMapContainer: {
     height: 50,
@@ -399,33 +520,33 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderBottomLeftRadius: 25,
-    borderBottomRightRadius: 25
+    borderBottomRightRadius: 25,
   },
   bubble: {
-    flexDirection: 'column',
-    alignSelf: 'flex-start',
-    backgroundColor: '#fff',
+    flexDirection: "column",
+    alignSelf: "flex-start",
+    backgroundColor: "#fff",
     borderRadius: 6,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderWidth: 0.5,
     padding: 15,
-    width: 'auto',
+    width: "auto",
   },
   // Arrow below the bubble
   arrow: {
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
-    borderTopColor: '#fff',
+    backgroundColor: "transparent",
+    borderColor: "transparent",
+    borderTopColor: "#fff",
     borderWidth: 16,
-    alignSelf: 'center',
+    alignSelf: "center",
     marginTop: -32,
   },
   arrowBorder: {
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
-    borderTopColor: '#007a87',
+    backgroundColor: "transparent",
+    borderColor: "transparent",
+    borderTopColor: "#007a87",
     borderWidth: 16,
-    alignSelf: 'center',
+    alignSelf: "center",
     marginTop: -0.5,
   },
   cancelBtn: {
@@ -434,24 +555,25 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.primary,
-    marginTop: 6
+    backgroundColor: "red",
+    color: "#fff",
+    marginTop: 6,
   },
   cancelBtnText: {
-    color: COLORS.greyscale900,
+    color: COLORS.white,
     fontFamily: "semiBold",
-    fontSize: 16
+    fontSize: 16,
   },
   arrowIconContainer: {
     width: "100%",
     alignItems: "center",
-    marginTop: 12
+    marginTop: 12,
   },
   arrowIcon: {
     height: 18,
     width: 18,
-    tintColor: COLORS.black
-  }
-})
+    tintColor: COLORS.black,
+  },
+});
 
-export default ActiveBookings
+export default ActiveBookings;
