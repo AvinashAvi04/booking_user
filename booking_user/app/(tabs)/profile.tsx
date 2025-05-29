@@ -13,7 +13,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { launchImagePicker } from "@/utils/ImagePickerHelper";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { COLORS, icons, images, SIZES } from "@/constants";
-import { useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import { useTheme } from "@/theme/ThemeProvider";
 import SettingsItem from "@/components/SettingsItem";
 import Button from "@/components/Button";
@@ -108,7 +108,7 @@ const Profile = () => {
           ]}
         >
           nathalie_erneson@gmail.com{" "}
-          <MaterialIcons name="edit" size={14} color={COLORS.primary} />
+          {/* <MaterialIcons name="edit" size={14} color={COLORS.primary} /> */}
         </Text>
       </View>
     );
@@ -141,11 +141,11 @@ const Profile = () => {
                     name="Address"
                     onPress={() => navigate("address")}
                 /> */}
-        <SettingsItem
+        {/* <SettingsItem
           icon={icons.userOutline}
           name="Edit Profile"
           onPress={() => navigate("editprofile")}
-        />
+        /> */}
         {/* <SettingsItem
                     icon={icons.bell2}
                     name="Notification"
@@ -323,7 +323,7 @@ const Profile = () => {
             title="Yes, Logout"
             filled
             style={styles.logoutButton}
-            onPress={() => refRBSheet.current.close()}
+            onPress={() => router.replace("/phonelogin")}
           />
         </View>
       </RBSheet>

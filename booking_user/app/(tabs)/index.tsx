@@ -40,16 +40,20 @@ const BookingForm = () => {
   const [activeTab, setActiveTab] = useState<TabType>("oneWay");
   const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(true);
   const [userName, setUserName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const { colors } = useTheme() as { colors: ThemeColors };
   const styles = createStyles(colors);
 
   const handleWelcomeSubmit = () => {
     if (!userName.trim()) {
-      Alert.alert("Name Required", "Please enter your name to continue");
+      Alert.alert(
+        "Name & Email Required",
+        "Please enter your name & email to continue"
+      );
       return;
     }
+    // Alert.alert(`Welcome, ${userName}!`, "Enjoy your ride with us!");
     setShowWelcomeModal(false);
-    Alert.alert(`Welcome, ${userName}!`, "Enjoy your ride with us!");
   };
 
   const renderTabContent = () => {
@@ -131,18 +135,27 @@ const BookingForm = () => {
           <Text style={[styles.modalTitle, styles.titleWithIcon]}>
             Welcome to Our App! 👋
           </Text>
-          <Text style={styles.modalSubtitle}>
-            We're excited to have you on board. Please tell us your name to get
-            started.
-          </Text>
 
           <View style={styles.contentContainer}>
+            <Text style={styles.modalSubtitle}>
+              We're excited to have you on board. Please tell us your name to
+              get started.
+            </Text>
             <Input
               id="userName"
               placeholder="Enter your name"
               placeholderTextColor={colors.textSecondary || colors.text}
               value={userName}
               onInputChanged={(id, text) => setUserName(text)}
+              autoFocus
+              style={styles.input}
+            />
+            <Input
+              id="email"
+              placeholder="Enter your email"
+              placeholderTextColor={colors.textSecondary || colors.text}
+              value={email}
+              onInputChanged={(id, text) => setEmail(text)}
               autoFocus
               style={styles.input}
             />
@@ -334,7 +347,7 @@ const createStyles = (colors: ThemeColors) =>
       fontFamily: "bold",
     },
     contentContainer: {
-      flex: 1,
+      // flex: 1,
       paddingHorizontal: SIZES.padding3,
       backgroundColor: colors.background,
     },

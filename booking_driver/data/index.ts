@@ -1,413 +1,426 @@
 import { icons, images } from "../constants";
 
 export const friends = [
-    {
-        id: "1",
-        name: "Tynisa Obey",
-        phoneNumber: "+1-300-400-0135",
-        avatar: images.user1,
-    },
-    {
-        id: "2",
-        name: "Florencio Dorance",
-        phoneNumber: "+1-309-900-0135",
-        avatar: images.user2,
-    },
-    {
-        id: "3",
-        name: "Chantal Shelburne",
-        phoneNumber: "+1-400-100-1009",
-        avatar: images.user3,
-    },
-    {
-        id: "4",
-        name: "Maryland Winkles",
-        phoneNumber: "+1-970-200-4550",
-        avatar: images.user4,
-    },
-    {
-        id: "5",
-        name: "Rodolfo Goode",
-        phoneNumber: "+1-100-200-9800",
-        avatar: images.user5,
-    },
-    {
-        id: "6",
-        name: "Benny Spanbauer",
-        phoneNumber: "+1-780-200-9800",
-        avatar: images.user6,
-    },
-    {
-        id: "7",
-        name: "Tyra Dillon",
-        phoneNumber: "+1-943-230-9899",
-        avatar: images.user7,
-    },
-    {
-        id: "8",
-        name: "Jamel Eusobio",
-        phoneNumber: "+1-900-234-9899",
-        avatar: images.user8,
-    },
-    {
-        id: "9",
-        name: "Pedro Haurad",
-        phoneNumber: "+1-240-234-9899",
-        avatar: images.user9
-    },
-    {
-        id: "10",
-        name: "Clinton Mcclure",
-        phoneNumber: "+1-500-234-4555",
-        avatar: images.user10
-    },
+  {
+    id: "1",
+    name: "Tynisa Obey",
+    phoneNumber: "+1-300-400-0135",
+    avatar: images.user1,
+  },
+  {
+    id: "2",
+    name: "Florencio Dorance",
+    phoneNumber: "+1-309-900-0135",
+    avatar: images.user2,
+  },
+  {
+    id: "3",
+    name: "Chantal Shelburne",
+    phoneNumber: "+1-400-100-1009",
+    avatar: images.user3,
+  },
+  {
+    id: "4",
+    name: "Maryland Winkles",
+    phoneNumber: "+1-970-200-4550",
+    avatar: images.user4,
+  },
+  {
+    id: "5",
+    name: "Rodolfo Goode",
+    phoneNumber: "+1-100-200-9800",
+    avatar: images.user5,
+  },
+  {
+    id: "6",
+    name: "Benny Spanbauer",
+    phoneNumber: "+1-780-200-9800",
+    avatar: images.user6,
+  },
+  {
+    id: "7",
+    name: "Tyra Dillon",
+    phoneNumber: "+1-943-230-9899",
+    avatar: images.user7,
+  },
+  {
+    id: "8",
+    name: "Jamel Eusobio",
+    phoneNumber: "+1-900-234-9899",
+    avatar: images.user8,
+  },
+  {
+    id: "9",
+    name: "Pedro Haurad",
+    phoneNumber: "+1-240-234-9899",
+    avatar: images.user9,
+  },
+  {
+    id: "10",
+    name: "Clinton Mcclure",
+    phoneNumber: "+1-500-234-4555",
+    avatar: images.user10,
+  },
 ];
 
-
 export const faqKeywords = [
-    {
-        id: "1",
-        name: "General"
-    },
-    {
-        id: "2",
-        name: "Account"
-    },
-    {
-        id: "3",
-        name: "Security"
-    },
-    {
-        id: "4",
-        name: "Booking"
-    },
-    {
-        id: "5",
-        name: "Payment"
-    }
+  {
+    id: "1",
+    name: "General",
+  },
+  {
+    id: "2",
+    name: "Account",
+  },
+  {
+    id: "3",
+    name: "Security",
+  },
+  {
+    id: "4",
+    name: "Booking",
+  },
+  {
+    id: "5",
+    name: "Payment",
+  },
 ];
 
 export const faqs = [
-    {
-        question: 'How do I book a taxi using the app?',
-        answer: 'To book a taxi, simply open the app, enter your pickup location, destination, and preferred time. Then choose from the available options and confirm your booking.',
-        type: "General"
-    },
-    {
-        question: 'Can I view details of available taxis, such as their model and driver information?',
-        answer: 'Yes, you can view details of available taxis including their model, driver information, and ratings. Simply select a taxi from the list of options provided in the app.',
-        type: "General"
-    },
-    {
-        question: 'What should I do if I need to cancel or modify a taxi reservation?',
-        answer: 'To cancel or modify a taxi reservation, go to the "My Bookings" section, find your reservation, and follow the provided options to make changes.',
-        type: "Account"
-    },
-    {
-        question: 'How can I find taxis with specific features or amenities, such as wheelchair accessibility?',
-        answer: 'You can use the app’s search filters to find taxis with specific features or amenities. Filter results by categories such as wheelchair accessibility or vehicle type.',
-        type: "Booking"
-    },
-    {
-        question: 'Is there a way to make payments for taxi bookings within the app?',
-        answer: 'Yes, you can securely make payments for taxi bookings using various payment methods available in the app, including credit/debit cards and digital wallets.',
-        type: "Payment"
-    },
-    {
-        question: 'Are my personal details and booking information kept secure?',
-        answer: 'Yes, we prioritize the security and confidentiality of your personal details and booking information. Our app complies with strict privacy and data protection standards.',
-        type: "Security"
-    },
-    {
-        question: 'Can I request additional assistance with special requirements or preferences for a taxi ride?',
-        answer: "Yes, you can request additional assistance with special requirements or preferences during the booking process. Simply specify your preferences, and we'll do our best to accommodate them.",
-        type: "General"
-    },
-    {
-        question: 'How can I provide feedback or rate my taxi ride experience?',
-        answer: 'After completing a taxi ride, you can provide feedback and rate your experience through the app’s rating and review system. Your feedback helps us improve our services for future rides.',
-        type: "General"
-    },
-    {
-        question: 'Is customer support available through this app?',
-        answer: 'While we provide taxi booking services, our app is not for customer support. For assistance, please contact our support team through the designated channels provided in the app.',
-        type: "General"
-    },
+  {
+    question: "How do I book a taxi using the app?",
+    answer:
+      "To book a taxi, simply open the app, enter your pickup location, destination, and preferred time. Then choose from the available options and confirm your booking.",
+    type: "General",
+  },
+  {
+    question:
+      "Can I view details of available taxis, such as their model and driver information?",
+    answer:
+      "Yes, you can view details of available taxis including their model, driver information, and ratings. Simply select a taxi from the list of options provided in the app.",
+    type: "General",
+  },
+  {
+    question:
+      "What should I do if I need to cancel or modify a taxi reservation?",
+    answer:
+      'To cancel or modify a taxi reservation, go to the "My Bookings" section, find your reservation, and follow the provided options to make changes.',
+    type: "Account",
+  },
+  {
+    question:
+      "How can I find taxis with specific features or amenities, such as wheelchair accessibility?",
+    answer:
+      "You can use the app’s search filters to find taxis with specific features or amenities. Filter results by categories such as wheelchair accessibility or vehicle type.",
+    type: "Booking",
+  },
+  {
+    question:
+      "Is there a way to make payments for taxi bookings within the app?",
+    answer:
+      "Yes, you can securely make payments for taxi bookings using various payment methods available in the app, including credit/debit cards and digital wallets.",
+    type: "Payment",
+  },
+  {
+    question: "Are my personal details and booking information kept secure?",
+    answer:
+      "Yes, we prioritize the security and confidentiality of your personal details and booking information. Our app complies with strict privacy and data protection standards.",
+    type: "Security",
+  },
+  {
+    question:
+      "Can I request additional assistance with special requirements or preferences for a taxi ride?",
+    answer:
+      "Yes, you can request additional assistance with special requirements or preferences during the booking process. Simply specify your preferences, and we'll do our best to accommodate them.",
+    type: "General",
+  },
+  {
+    question: "How can I provide feedback or rate my taxi ride experience?",
+    answer:
+      "After completing a taxi ride, you can provide feedback and rate your experience through the app’s rating and review system. Your feedback helps us improve our services for future rides.",
+    type: "General",
+  },
+  {
+    question: "Is customer support available through this app?",
+    answer:
+      "While we provide taxi booking services, our app is not for customer support. For assistance, please contact our support team through the designated channels provided in the app.",
+    type: "General",
+  },
 ];
 
 export const messsagesData = [
-    {
-        id: "1",
-        fullName: "Jhon Smith",
-        userImg: images.user1,
-        lastSeen: "2023-11-16T04:52:06.501Z",
-        lastMessage: 'I love you. see you soon baby',
-        messageInQueue: 2,
-        lastMessageTime: "12:25 PM",
-        isOnline: true,
-    },
-    {
-        id: "2",
-        fullName: "Anuska Sharma",
-        userImg: images.user2,
-        lastSeen: "2023-11-18T04:52:06.501Z",
-        lastMessage: 'I Know. you are so busy man.',
-        messageInQueue: 0,
-        lastMessageTime: "12:15 PM",
-        isOnline: false
-    },
-    {
-        id: "3",
-        fullName: "Virat Kohili",
-        userImg: images.user3,
-        lastSeen: "2023-11-20T04:52:06.501Z",
-        lastMessage: 'Ok, see u soon',
-        messageInQueue: 0,
-        lastMessageTime: "09:12 PM",
-        isOnline: true
-    },
-    {
-        id: "4",
-        fullName: "Shikhor Dhaon",
-        userImg: images.user4,
-        lastSeen: "2023-11-18T04:52:06.501Z",
-        lastMessage: 'Great! Do you Love it.',
-        messageInQueue: 0,
-        lastMessageTime: "04:12 PM",
-        isOnline: true
-    },
-    {
-        id: "5",
-        fullName: "Shakib Hasan",
-        userImg: images.user5,
-        lastSeen: "2023-11-21T04:52:06.501Z",
-        lastMessage: 'Thank you !',
-        messageInQueue: 2,
-        lastMessageTime: "10:30 AM",
-        isOnline: true
-    },
-    {
-        id: "6",
-        fullName: "Jacksoon",
-        userImg: images.user6,
-        lastSeen: "2023-11-20T04:52:06.501Z",
-        lastMessage: 'Do you want to go out dinner',
-        messageInQueue: 3,
-        lastMessageTime: "10:05 PM",
-        isOnline: false
-    },
-    {
-        id: "7",
-        fullName: "Tom Jerry",
-        userImg: images.user7,
-        lastSeen: "2023-11-20T04:52:06.501Z",
-        lastMessage: 'Do you want to go out dinner',
-        messageInQueue: 2,
-        lastMessageTime: "11:05 PM",
-        isOnline: true
-    },
-    {
-        id: "8",
-        fullName: "Lucky Luck",
-        userImg: images.user8,
-        lastSeen: "2023-11-20T04:52:06.501Z",
-        lastMessage: 'Can you share the design with me?',
-        messageInQueue: 2,
-        lastMessageTime: "09:11 PM",
-        isOnline: true
-    },
-    {
-        id: "9",
-        fullName: "Nate Jack",
-        userImg: images.user9,
-        lastSeen: "2023-11-20T04:52:06.501Z",
-        lastMessage: 'Tell me what you want?',
-        messageInQueue: 0,
-        lastMessageTime: "06:43 PM",
-        isOnline: true
-    }
+  {
+    id: "1",
+    fullName: "Jhon Smith",
+    userImg: images.user1,
+    lastSeen: "2023-11-16T04:52:06.501Z",
+    lastMessage: "I love you. see you soon baby",
+    messageInQueue: 2,
+    lastMessageTime: "12:25 PM",
+    isOnline: true,
+  },
+  {
+    id: "2",
+    fullName: "Anuska Sharma",
+    userImg: images.user2,
+    lastSeen: "2023-11-18T04:52:06.501Z",
+    lastMessage: "I Know. you are so busy man.",
+    messageInQueue: 0,
+    lastMessageTime: "12:15 PM",
+    isOnline: false,
+  },
+  {
+    id: "3",
+    fullName: "Virat Kohili",
+    userImg: images.user3,
+    lastSeen: "2023-11-20T04:52:06.501Z",
+    lastMessage: "Ok, see u soon",
+    messageInQueue: 0,
+    lastMessageTime: "09:12 PM",
+    isOnline: true,
+  },
+  {
+    id: "4",
+    fullName: "Shikhor Dhaon",
+    userImg: images.user4,
+    lastSeen: "2023-11-18T04:52:06.501Z",
+    lastMessage: "Great! Do you Love it.",
+    messageInQueue: 0,
+    lastMessageTime: "04:12 PM",
+    isOnline: true,
+  },
+  {
+    id: "5",
+    fullName: "Shakib Hasan",
+    userImg: images.user5,
+    lastSeen: "2023-11-21T04:52:06.501Z",
+    lastMessage: "Thank you !",
+    messageInQueue: 2,
+    lastMessageTime: "10:30 AM",
+    isOnline: true,
+  },
+  {
+    id: "6",
+    fullName: "Jacksoon",
+    userImg: images.user6,
+    lastSeen: "2023-11-20T04:52:06.501Z",
+    lastMessage: "Do you want to go out dinner",
+    messageInQueue: 3,
+    lastMessageTime: "10:05 PM",
+    isOnline: false,
+  },
+  {
+    id: "7",
+    fullName: "Tom Jerry",
+    userImg: images.user7,
+    lastSeen: "2023-11-20T04:52:06.501Z",
+    lastMessage: "Do you want to go out dinner",
+    messageInQueue: 2,
+    lastMessageTime: "11:05 PM",
+    isOnline: true,
+  },
+  {
+    id: "8",
+    fullName: "Lucky Luck",
+    userImg: images.user8,
+    lastSeen: "2023-11-20T04:52:06.501Z",
+    lastMessage: "Can you share the design with me?",
+    messageInQueue: 2,
+    lastMessageTime: "09:11 PM",
+    isOnline: true,
+  },
+  {
+    id: "9",
+    fullName: "Nate Jack",
+    userImg: images.user9,
+    lastSeen: "2023-11-20T04:52:06.501Z",
+    lastMessage: "Tell me what you want?",
+    messageInQueue: 0,
+    lastMessageTime: "06:43 PM",
+    isOnline: true,
+  },
 ];
 
 export const callData = [
-    {
-        id: "1",
-        fullName: "Roselle Erhman",
-        userImg: images.user10,
-        status: "Incoming",
-        date: "Dec 19, 2024"
-    },
-    {
-        id: "2",
-        fullName: "Willard Purnell",
-        userImg: images.user9,
-        status: "Outgoing",
-        date: "Dec 17, 2024"
-    },
-    {
-        id: "3",
-        fullName: "Charlotte Hanlin",
-        userImg: images.user8,
-        status: "Missed",
-        date: "Dec 16, 2024"
-    },
-    {
-        id: "4",
-        fullName: "Merlin Kevin",
-        userImg: images.user7,
-        status: "Missed",
-        date: "Dec 16, 2024"
-    },
-    {
-        id: "5",
-        fullName: "Lavern Laboy",
-        userImg: images.user6,
-        status: "Outgoing",
-        date: "Dec 16, 2024"
-    },
-    {
-        id: "6",
-        fullName: "Phyllis Godley",
-        userImg: images.user5,
-        status: "Incoming",
-        date: "Dec 15, 2024"
-    },
-    {
-        id: "7",
-        fullName: "Tyra Dillon",
-        userImg: images.user4,
-        status: "Outgoing",
-        date: "Dec 15, 2024"
-    },
-    {
-        id: "8",
-        fullName: "Marci Center",
-        userImg: images.user3,
-        status: "Missed",
-        date: "Dec 15, 2024"
-    },
-    {
-        id: "9",
-        fullName: "Clinton Mccure",
-        userImg: images.user2,
-        status: "Outgoing",
-        date: "Dec 15, 2024"
-    },
+  {
+    id: "1",
+    fullName: "Roselle Erhman",
+    userImg: images.user10,
+    status: "Incoming",
+    date: "Dec 19, 2024",
+  },
+  {
+    id: "2",
+    fullName: "Willard Purnell",
+    userImg: images.user9,
+    status: "Outgoing",
+    date: "Dec 17, 2024",
+  },
+  {
+    id: "3",
+    fullName: "Charlotte Hanlin",
+    userImg: images.user8,
+    status: "Missed",
+    date: "Dec 16, 2024",
+  },
+  {
+    id: "4",
+    fullName: "Merlin Kevin",
+    userImg: images.user7,
+    status: "Missed",
+    date: "Dec 16, 2024",
+  },
+  {
+    id: "5",
+    fullName: "Lavern Laboy",
+    userImg: images.user6,
+    status: "Outgoing",
+    date: "Dec 16, 2024",
+  },
+  {
+    id: "6",
+    fullName: "Phyllis Godley",
+    userImg: images.user5,
+    status: "Incoming",
+    date: "Dec 15, 2024",
+  },
+  {
+    id: "7",
+    fullName: "Tyra Dillon",
+    userImg: images.user4,
+    status: "Outgoing",
+    date: "Dec 15, 2024",
+  },
+  {
+    id: "8",
+    fullName: "Marci Center",
+    userImg: images.user3,
+    status: "Missed",
+    date: "Dec 15, 2024",
+  },
+  {
+    id: "9",
+    fullName: "Clinton Mccure",
+    userImg: images.user2,
+    status: "Outgoing",
+    date: "Dec 15, 2024",
+  },
 ];
 
 export const transactionHistory = [
-    {
-        id: "1",
-        image: images.user1,
-        name: "Daniel Austin",
-        date: "Dec 20, 2024 | 10:00 AM",
-        type: "Taxi Expense",
-        amount: "$14"
-    },
-    {
-        id: "2",
-        image: images.user2,
-        name: "Top Up Wallet",
-        date: "Dec 16, 2024 | 13:34 PM",
-        type: "Top Up",
-        amount: "$80"
-    },
-    {
-        id: "3",
-        image: images.user3,
-        name: "Sarah Wilson",
-        date: "Dec 14, 2024 | 11:39 AM",
-        type: "Taxi Expense",
-        amount: "$32"
-    },
-    {
-        id: "4",
-        image: images.user2,
-        name: "Daniel Austion",
-        date: "Dec 10, 2024 | 09:32 AM",
-        type: "Top Up",
-        amount: "$112"
-    },
-    {
-        id: "5",
-        image: images.user5,
-        name: "Benny Spanbauleur",
-        date: "Dec 09, 2024 | 10:08 AM",
-        type: "Taxi Expense",
-        amount: "$43"
-    },
-    {
-        id: "6",
-        image: images.user6,
-        name: "Roselle Dorrence",
-        date: "Dec 08, 2024 | 09:12 AM",
-        type: "Taxi Expense",
-        amount: "$22"
-    },
-    {
-        id: "7",
-        image: images.user2,
-        name: "Daniel Austion",
-        date: "Dec 08, 2024 | 16:28 PM",
-        type: "Top Up",
-        amount: "$200"
-    },
-    {
-        id: "8",
-        image: images.user2,
-        name: "Daniel Austion",
-        date: "Dec 07, 2024 | 15:12 PM",
-        type: "Top Up",
-        amount: "$120"
-    },
-    {
-        id: "9",
-        image: images.user2,
-        name: "Daniel Austion",
-        date: "Dec 07, 2024 | 22:12 PM",
-        type: "Top Up",
-        amount: "$20"
-    },
-    {
-        id: "10",
-        image: images.user8,
-        name: "Lucky Luck",
-        date: "Dec 06, 2024 | 10:08 AM",
-        type: "Taxi Expense",
-        amount: "$12"
-    },
-    {
-        id: "11",
-        image: images.user2,
-        name: "Jennifer Lucie",
-        date: "Dec 03, 2024 | 11:48 AM",
-        type: "Top Up",
-        amount: "$45"
-    }
+  {
+    id: "1",
+    image: images.user1,
+    name: "Daniel Austin",
+    date: "Dec 20, 2024 | 10:00 AM",
+    type: "Taxi Expense",
+    amount: "$14",
+  },
+  {
+    id: "2",
+    image: images.user2,
+    name: "Top Up Wallet",
+    date: "Dec 16, 2024 | 13:34 PM",
+    type: "Top Up",
+    amount: "$80",
+  },
+  {
+    id: "3",
+    image: images.user3,
+    name: "Sarah Wilson",
+    date: "Dec 14, 2024 | 11:39 AM",
+    type: "Taxi Expense",
+    amount: "$32",
+  },
+  {
+    id: "4",
+    image: images.user2,
+    name: "Daniel Austion",
+    date: "Dec 10, 2024 | 09:32 AM",
+    type: "Top Up",
+    amount: "$112",
+  },
+  {
+    id: "5",
+    image: images.user5,
+    name: "Benny Spanbauleur",
+    date: "Dec 09, 2024 | 10:08 AM",
+    type: "Taxi Expense",
+    amount: "$43",
+  },
+  {
+    id: "6",
+    image: images.user6,
+    name: "Roselle Dorrence",
+    date: "Dec 08, 2024 | 09:12 AM",
+    type: "Taxi Expense",
+    amount: "$22",
+  },
+  {
+    id: "7",
+    image: images.user2,
+    name: "Daniel Austion",
+    date: "Dec 08, 2024 | 16:28 PM",
+    type: "Top Up",
+    amount: "$200",
+  },
+  {
+    id: "8",
+    image: images.user2,
+    name: "Daniel Austion",
+    date: "Dec 07, 2024 | 15:12 PM",
+    type: "Top Up",
+    amount: "$120",
+  },
+  {
+    id: "9",
+    image: images.user2,
+    name: "Daniel Austion",
+    date: "Dec 07, 2024 | 22:12 PM",
+    type: "Top Up",
+    amount: "$20",
+  },
+  {
+    id: "10",
+    image: images.user8,
+    name: "Lucky Luck",
+    date: "Dec 06, 2024 | 10:08 AM",
+    type: "Taxi Expense",
+    amount: "$12",
+  },
+  {
+    id: "11",
+    image: images.user2,
+    name: "Jennifer Lucie",
+    date: "Dec 03, 2024 | 11:48 AM",
+    type: "Top Up",
+    amount: "$45",
+  },
 ];
 
 export const activeBookings = [
-    {
-        id: "1",
-        status: "Active",
-        name: "Daniel Austin",
-        avatar: images.user1,
-        taxi: "Mercedes-Benz",
-        taxiID: "HSW 4736 XK",
-        distance: "4.5 Km",
-        duration: "4 min",
-        price: "$7.00",
-        date: "Dec 20, 2024",
-        time: "10:00 AM",
-        baseLocationName: "National Grand Park",
-        baseLocationAddress: "123 Main St, San Francisco, CA 94103",
-        baseLocationLat: 37.7749,
-        baseLocationLong: -122.4194,
-        destinationLocationName: "Soft Bank Buildting",
-        destinationLocationAddress: "26 State St. Daphne, AL 36526",
-        destinationLocationLat: 33.7749,
-        destinationLocationLong: -122.3194
-    },
-{
+  {
+    id: "1",
+    status: "Active",
+    name: "Daniel Austin",
+    avatar: images.user1,
+    taxi: "Mercedes-Benz",
+    taxiID: "HSW 4736 XK",
+    distance: "4.5 Km",
+    duration: "4 min",
+    price: "$7.00",
+    date: "Dec 20, 2024",
+    time: "10:00 AM",
+    baseLocationName: "National Grand Park",
+    baseLocationAddress: "123 Main St, San Francisco, CA 94103",
+    baseLocationLat: 37.7749,
+    baseLocationLong: -122.4194,
+    destinationLocationName: "Soft Bank Buildting",
+    destinationLocationAddress: "26 State St. Daphne, AL 36526",
+    destinationLocationLat: 33.7749,
+    destinationLocationLong: -122.3194,
+  },
+  {
     id: "2",
     status: "Active",
     name: "Emily Johnson",
@@ -426,9 +439,9 @@ export const activeBookings = [
     destinationLocationName: "Golden Gate Bridge",
     destinationLocationAddress: "Golden Gate Bridge, San Francisco, CA",
     destinationLocationLat: 37.8199,
-    destinationLocationLong: -122.4783
-},
-{
+    destinationLocationLong: -122.4783,
+  },
+  {
     id: "3",
     status: "Active",
     name: "Michael Brown",
@@ -447,9 +460,9 @@ export const activeBookings = [
     destinationLocationName: "San Francisco Airport",
     destinationLocationAddress: "San Francisco International Airport, CA",
     destinationLocationLat: 37.6213,
-    destinationLocationLong: -122.3790
-},
-{
+    destinationLocationLong: -122.379,
+  },
+  {
     id: "4",
     status: "Active",
     name: "Sophia Rodriguez",
@@ -468,9 +481,9 @@ export const activeBookings = [
     destinationLocationName: "Fisherman's Wharf",
     destinationLocationAddress: "Fisherman's Wharf, San Francisco, CA",
     destinationLocationLat: 37.8096,
-    destinationLocationLong: -122.4156
-},
-{
+    destinationLocationLong: -122.4156,
+  },
+  {
     id: "5",
     status: "Active",
     name: "William Lee",
@@ -489,9 +502,9 @@ export const activeBookings = [
     destinationLocationName: "Pier 39",
     destinationLocationAddress: "Pier 39, San Francisco, CA",
     destinationLocationLat: 37.8086,
-    destinationLocationLong: -122.4093
-},
-{
+    destinationLocationLong: -122.4093,
+  },
+  {
     id: "6",
     status: "Active",
     name: "Olivia Martinez",
@@ -510,9 +523,9 @@ export const activeBookings = [
     destinationLocationName: "Coit Tower",
     destinationLocationAddress: "1 Telegraph Hill Blvd, San Francisco, CA",
     destinationLocationLat: 37.8024,
-    destinationLocationLong: -122.4058
-},
-{
+    destinationLocationLong: -122.4058,
+  },
+  {
     id: "7",
     status: "Active",
     name: "Ethan Wilson",
@@ -531,504 +544,510 @@ export const activeBookings = [
     destinationLocationName: "Muir Woods National Monument",
     destinationLocationAddress: "Muir Woods National Monument, Mill Valley, CA",
     destinationLocationLat: 37.8965,
-    destinationLocationLong: -122.5800
-}
-
+    destinationLocationLong: -122.58,
+  },
 ];
 
-
 export const completedBookings = [
-    {
-        id: "8",
-        status: "Completed",
-        name: "Sophie Taylor",
-        avatar: images.user8,
-        taxi: "Lexus RX",
-        taxiID: "LMN 987",
-        distance: "9.8 Km",
-        duration: "14 min",
-        price: "$14.50",
-        date: "Dec 27, 2024",
-        time: "6:30 PM",
-        baseLocationName: "Downtown Square",
-        baseLocationAddress: "555 Maple St, San Francisco, CA 94105",
-        baseLocationLat: "37.7885",
-        baseLocationLong: "-122.4027",
-        destinationLocationName: "Alcatraz Island",
-        destinationLocationAddress: "Alcatraz Island, San Francisco, CA",
-        destinationLocationLat: "37.8267",
-        destinationLocationLong: "-122.4233"
-    },
-    {
-        id: "9",
-        status: "Completed",
-        name: "Lucas Anderson",
-        avatar: images.user9,
-        taxi: "Ford Fusion",
-        taxiID: "DEF 654",
-        distance: "5.2 Km",
-        duration: "8 min",
-        price: "$8.00",
-        date: "Dec 28, 2024",
-        time: "11:00 AM",
-        baseLocationName: "Tech Hub",
-        baseLocationAddress: "777 Oak St, San Francisco, CA 94103",
-        baseLocationLat: "37.7749",
-        baseLocationLong: "-122.4313",
-        destinationLocationName: "Chinatown",
-        destinationLocationAddress: "Chinatown, San Francisco, CA",
-        destinationLocationLat: "37.7941",
-        destinationLocationLong: "-122.4078"
-    },
-    {
-        id: "10",
-        status: "Completed",
-        name: "Aiden Clark",
-        avatar: images.user10,
-        taxi: "Hyundai Sonata",
-        taxiID: "TUV 321",
-        distance: "12.5 Km",
-        duration: "18 min",
-        price: "$16.00",
-        date: "Dec 29, 2024",
-        time: "3:45 PM",
-        baseLocationName: "Garden Park",
-        baseLocationAddress: "888 Cedar St, San Francisco, CA 94109",
-        baseLocationLat: "37.7749",
-        baseLocationLong: "-122.4194",
-        destinationLocationName: "AT&T Park",
-        destinationLocationAddress: "24 Willie Mays Plaza, San Francisco, CA",
-        destinationLocationLat: "37.7786",
-        destinationLocationLong: "-122.3893"
-    }
+  {
+    id: "8",
+    status: "Completed",
+    name: "Sophie Taylor",
+    avatar: images.user8,
+    taxi: "Lexus RX",
+    taxiID: "LMN 987",
+    distance: "9.8 Km",
+    duration: "14 min",
+    price: "$14.50",
+    date: "Dec 27, 2024",
+    time: "6:30 PM",
+    baseLocationName: "Downtown Square",
+    baseLocationAddress: "555 Maple St, San Francisco, CA 94105",
+    baseLocationLat: "37.7885",
+    baseLocationLong: "-122.4027",
+    destinationLocationName: "Alcatraz Island",
+    destinationLocationAddress: "Alcatraz Island, San Francisco, CA",
+    destinationLocationLat: "37.8267",
+    destinationLocationLong: "-122.4233",
+  },
+  {
+    id: "9",
+    status: "Completed",
+    name: "Lucas Anderson",
+    avatar: images.user9,
+    taxi: "Ford Fusion",
+    taxiID: "DEF 654",
+    distance: "5.2 Km",
+    duration: "8 min",
+    price: "$8.00",
+    date: "Dec 28, 2024",
+    time: "11:00 AM",
+    baseLocationName: "Tech Hub",
+    baseLocationAddress: "777 Oak St, San Francisco, CA 94103",
+    baseLocationLat: "37.7749",
+    baseLocationLong: "-122.4313",
+    destinationLocationName: "Chinatown",
+    destinationLocationAddress: "Chinatown, San Francisco, CA",
+    destinationLocationLat: "37.7941",
+    destinationLocationLong: "-122.4078",
+  },
+  {
+    id: "10",
+    status: "Completed",
+    name: "Aiden Clark",
+    avatar: images.user10,
+    taxi: "Hyundai Sonata",
+    taxiID: "TUV 321",
+    distance: "12.5 Km",
+    duration: "18 min",
+    price: "$16.00",
+    date: "Dec 29, 2024",
+    time: "3:45 PM",
+    baseLocationName: "Garden Park",
+    baseLocationAddress: "888 Cedar St, San Francisco, CA 94109",
+    baseLocationLat: "37.7749",
+    baseLocationLong: "-122.4194",
+    destinationLocationName: "AT&T Park",
+    destinationLocationAddress: "24 Willie Mays Plaza, San Francisco, CA",
+    destinationLocationLat: "37.7786",
+    destinationLocationLong: "-122.3893",
+  },
 ];
 
 export const cancelledBookings = [
-    {
-        id: "11",
-        status: "Cancelled",
-        name: "Emma Wilson",
-        avatar: images.user3,
-        taxi: "Chevrolet Malibu",
-        taxiID: "WXY 456",
-        distance: "6.3 Km",
-        duration: "9 min",
-        price: "$9.50",
-        date: "Dec 30, 2024",
-        time: "8:15 AM",
-        baseLocationName: "Riverfront Park",
-        baseLocationAddress: "999 Pine St, San Francisco, CA 94102",
-        baseLocationLat: "37.7749",
-        baseLocationLong: "-122.4194",
-        destinationLocationName: "Palace of Fine Arts",
-        destinationLocationAddress: "3301 Lyon St, San Francisco, CA",
-        destinationLocationLat: "37.8024",
-        destinationLocationLong: "-122.4480"
-    },
-    {
-        id: "12",
-        status: "Cancelled",
-        name: "Noah Garcia",
-        avatar: images.user4,
-        taxi: "Toyota Camry",
-        taxiID: "ZAB 789",
-        distance: "4.0 Km",
-        duration: "6 min",
-        price: "$6.00",
-        date: "Dec 31, 2024",
-        time: "1:00 PM",
-        baseLocationName: "Sunset Beach",
-        baseLocationAddress: "111 Ocean Blvd, San Francisco, CA 94121",
-        baseLocationLat: "37.7725",
-        baseLocationLong: "-122.5108",
-        destinationLocationName: "Golden Gate Park",
-        destinationLocationAddress: "Golden Gate Park, San Francisco, CA",
-        destinationLocationLat: "37.7694",
-        destinationLocationLong: "-122.4862"
-    },
-    {
-        id: "13",
-        status: "Cancelled",
-        name: "Isabella Martinez",
-        avatar: images.user5,
-        taxi: "Honda Civic",
-        taxiID: "QWE 123",
-        distance: "7.8 Km",
-        duration: "11 min",
-        price: "$11.00",
-        date: "Jan 1, 2025",
-        time: "4:30 PM",
-        baseLocationName: "Harbor Viewpoint",
-        baseLocationAddress: "222 Harbor Rd, San Francisco, CA 94105",
-        baseLocationLat: "37.7900",
-        baseLocationLong: "-122.3895",
-        destinationLocationName: "Lombard Street",
-        destinationLocationAddress: "Lombard St, San Francisco, CA",
-        destinationLocationLat: "37.8021",
-        destinationLocationLong: "-122.4187"
-    },
-    {
-        id: "14",
-        status: "Cancelled",
-        name: "Mia Brown",
-        avatar: images.user6,
-        taxi: "Subaru Outback",
-        taxiID: "RST 789",
-        distance: "3.5 Km",
-        duration: "7 min",
-        price: "$7.50",
-        date: "Jan 2, 2025",
-        time: "9:45 AM",
-        baseLocationName: "Mountain View",
-        baseLocationAddress: "333 Summit Rd, San Francisco, CA 94107",
-        baseLocationLat: "37.7577",
-        baseLocationLong: "-122.4376",
-        destinationLocationName: "Union Square",
-        destinationLocationAddress: "Union Square, San Francisco, CA",
-        destinationLocationLat: "37.7879",
-        destinationLocationLong: "-122.4075"
-    },
-    {
-        id: "15",
-        status: "Cancelled",
-        name: "James Wilson",
-        avatar: images.user7,
-        taxi: "Kia Optima",
-        taxiID: "UVW 987",
-        distance: "10.0 Km",
-        duration: "16 min",
-        price: "$13.00",
-        date: "Jan 3, 2025",
-        time: "2:20 PM",
-        baseLocationName: "Beachfront Avenue",
-        baseLocationAddress: "444 Beachfront Rd, San Francisco, CA 94132",
-        baseLocationLat: "37.7847",
-        baseLocationLong: "-122.4901",
-        destinationLocationName: "Oracle Park",
-        destinationLocationAddress: "24 Willie Mays Plaza, San Francisco, CA",
-        destinationLocationLat: "37.7786",
-        destinationLocationLong: "-122.3893"
-    }
+  {
+    id: "11",
+    status: "Cancelled",
+    name: "Emma Wilson",
+    avatar: images.user3,
+    taxi: "Chevrolet Malibu",
+    taxiID: "WXY 456",
+    distance: "6.3 Km",
+    duration: "9 min",
+    price: "$9.50",
+    date: "Dec 30, 2024",
+    time: "8:15 AM",
+    baseLocationName: "Riverfront Park",
+    baseLocationAddress: "999 Pine St, San Francisco, CA 94102",
+    baseLocationLat: "37.7749",
+    baseLocationLong: "-122.4194",
+    destinationLocationName: "Palace of Fine Arts",
+    destinationLocationAddress: "3301 Lyon St, San Francisco, CA",
+    destinationLocationLat: "37.8024",
+    destinationLocationLong: "-122.4480",
+  },
+  {
+    id: "12",
+    status: "Cancelled",
+    name: "Noah Garcia",
+    avatar: images.user4,
+    taxi: "Toyota Camry",
+    taxiID: "ZAB 789",
+    distance: "4.0 Km",
+    duration: "6 min",
+    price: "$6.00",
+    date: "Dec 31, 2024",
+    time: "1:00 PM",
+    baseLocationName: "Sunset Beach",
+    baseLocationAddress: "111 Ocean Blvd, San Francisco, CA 94121",
+    baseLocationLat: "37.7725",
+    baseLocationLong: "-122.5108",
+    destinationLocationName: "Golden Gate Park",
+    destinationLocationAddress: "Golden Gate Park, San Francisco, CA",
+    destinationLocationLat: "37.7694",
+    destinationLocationLong: "-122.4862",
+  },
+  {
+    id: "13",
+    status: "Cancelled",
+    name: "Isabella Martinez",
+    avatar: images.user5,
+    taxi: "Honda Civic",
+    taxiID: "QWE 123",
+    distance: "7.8 Km",
+    duration: "11 min",
+    price: "$11.00",
+    date: "Jan 1, 2025",
+    time: "4:30 PM",
+    baseLocationName: "Harbor Viewpoint",
+    baseLocationAddress: "222 Harbor Rd, San Francisco, CA 94105",
+    baseLocationLat: "37.7900",
+    baseLocationLong: "-122.3895",
+    destinationLocationName: "Lombard Street",
+    destinationLocationAddress: "Lombard St, San Francisco, CA",
+    destinationLocationLat: "37.8021",
+    destinationLocationLong: "-122.4187",
+  },
+  {
+    id: "14",
+    status: "Cancelled",
+    name: "Mia Brown",
+    avatar: images.user6,
+    taxi: "Subaru Outback",
+    taxiID: "RST 789",
+    distance: "3.5 Km",
+    duration: "7 min",
+    price: "$7.50",
+    date: "Jan 2, 2025",
+    time: "9:45 AM",
+    baseLocationName: "Mountain View",
+    baseLocationAddress: "333 Summit Rd, San Francisco, CA 94107",
+    baseLocationLat: "37.7577",
+    baseLocationLong: "-122.4376",
+    destinationLocationName: "Union Square",
+    destinationLocationAddress: "Union Square, San Francisco, CA",
+    destinationLocationLat: "37.7879",
+    destinationLocationLong: "-122.4075",
+  },
+  {
+    id: "15",
+    status: "Cancelled",
+    name: "James Wilson",
+    avatar: images.user7,
+    taxi: "Kia Optima",
+    taxiID: "UVW 987",
+    distance: "10.0 Km",
+    duration: "16 min",
+    price: "$13.00",
+    date: "Jan 3, 2025",
+    time: "2:20 PM",
+    baseLocationName: "Beachfront Avenue",
+    baseLocationAddress: "444 Beachfront Rd, San Francisco, CA 94132",
+    baseLocationLat: "37.7847",
+    baseLocationLong: "-122.4901",
+    destinationLocationName: "Oracle Park",
+    destinationLocationAddress: "24 Willie Mays Plaza, San Francisco, CA",
+    destinationLocationLat: "37.7786",
+    destinationLocationLong: "-122.3893",
+  },
 ];
 
 export const allRoutes = [
-    {
-        id: "1",
-        name: "Elena Fashion Store",
-        address: "43 N. Augusta St. Lorain, OH 44052",
-        distance: "1.4 Km"
-    },
-    {
-        id: "2",
-        name: "Grand City Park",
-        address: "1234 Main St. San Francisco, CA 94102",
-        distance: "1.2 Km"
-    },
-    {
-        id: "3",
-        name: "Tech Plaza",
-        address: "789 Innovation Way, Mountain View, CA 94043",
-        distance: "2.5 Km"
-    },
-    {
-        id: "4",
-        name: "Riverfront Mall",
-        address: "210 Riverfront Dr, Omaha, NE 68102",
-        distance: "3.8 Km"
-    },
-    {
-        id: "5",
-        name: "Historic Landmark Museum",
-        address: "500 Main St, Springfield, MA 01103",
-        distance: "2.1 Km"
-    },
-    {
-        id: "6",
-        name: "Sports Arena",
-        address: "777 Championship Dr, Los Angeles, CA 90015",
-        distance: "5.6 Km"
-    },
-    {
-        id: "7",
-        name: "Central Library",
-        address: "100 Public Library Plaza, Saint Louis, MO 63101",
-        distance: "1.8 Km"
-    },
-    {
-        id: "8",
-        name: "Community Recreation Center",
-        address: "450 Recreation Dr, Raleigh, NC 27607",
-        distance: "3.2 Km"
-    },
-    {
-        id: "9",
-        name: "Shopping Center",
-        address: "2000 Mall Blvd, Duluth, GA 30096",
-        distance: "2.9 Km"
-    },
-    {
-        id: "10",
-        name: "Medical Center",
-        address: "123 Hospital Way, Houston, TX 77030",
-        distance: "4.5 Km"
-    },
-    {
-        id: "11",
-        name: "University Campus",
-        address: "500 College Ave, Ithaca, NY 14850",
-        distance: "3.6 Km"
-    },
-    {
-        id: "12",
-        name: "City Zoo",
-        address: "100 Zoo Ln, San Diego, CA 92101",
-        distance: "6.3 Km"
-    },
-    {
-        id: "13",
-        name: "Business District",
-        address: "700 Financial Way, Chicago, IL 60606",
-        distance: "2.7 Km"
-    },
-    {
-        id: "14",
-        name: "Suburban Residential Area",
-        address: "1000 Elm St, Suburbia, NY 12345",
-        distance: "8.2 Km"
-    },
-    {
-        id: "15",
-        name: "Amusement Park",
-        address: "123 Fun St, Orlando, FL 32801",
-        distance: "10.4 Km"
-    },
-    {
-        id: "16",
-        name: "Civic Center",
-        address: "300 City Hall Square, Boston, MA 02109",
-        distance: "2.3 Km"
-    },
-    {
-        id: "17",
-        name: "Historic District",
-        address: "500 Heritage Blvd, Charleston, SC 29401",
-        distance: "4.1 Km"
-    },
-    {
-        id: "18",
-        name: "Convention Center",
-        address: "789 Conference Way, Las Vegas, NV 89109",
-        distance: "6.9 Km"
-    },
-    {
-        id: "19",
-        name: "Waterfront Promenade",
-        address: "200 Pier Ave, Seattle, WA 98101",
-        distance: "3.9 Km"
-    },
-    {
-        id: "20",
-        name: "Garden Park",
-        address: "600 Bloom St, Portland, OR 97201",
-        distance: "5.7 Km"
-    }
+  {
+    id: "1",
+    name: "Elena Fashion Store",
+    address: "43 N. Augusta St. Lorain, OH 44052",
+    distance: "1.4 Km",
+  },
+  {
+    id: "2",
+    name: "Grand City Park",
+    address: "1234 Main St. San Francisco, CA 94102",
+    distance: "1.2 Km",
+  },
+  {
+    id: "3",
+    name: "Tech Plaza",
+    address: "789 Innovation Way, Mountain View, CA 94043",
+    distance: "2.5 Km",
+  },
+  {
+    id: "4",
+    name: "Riverfront Mall",
+    address: "210 Riverfront Dr, Omaha, NE 68102",
+    distance: "3.8 Km",
+  },
+  {
+    id: "5",
+    name: "Historic Landmark Museum",
+    address: "500 Main St, Springfield, MA 01103",
+    distance: "2.1 Km",
+  },
+  {
+    id: "6",
+    name: "Sports Arena",
+    address: "777 Championship Dr, Los Angeles, CA 90015",
+    distance: "5.6 Km",
+  },
+  {
+    id: "7",
+    name: "Central Library",
+    address: "100 Public Library Plaza, Saint Louis, MO 63101",
+    distance: "1.8 Km",
+  },
+  {
+    id: "8",
+    name: "Community Recreation Center",
+    address: "450 Recreation Dr, Raleigh, NC 27607",
+    distance: "3.2 Km",
+  },
+  {
+    id: "9",
+    name: "Shopping Center",
+    address: "2000 Mall Blvd, Duluth, GA 30096",
+    distance: "2.9 Km",
+  },
+  {
+    id: "10",
+    name: "Medical Center",
+    address: "123 Hospital Way, Houston, TX 77030",
+    distance: "4.5 Km",
+  },
+  {
+    id: "11",
+    name: "University Campus",
+    address: "500 College Ave, Ithaca, NY 14850",
+    distance: "3.6 Km",
+  },
+  {
+    id: "12",
+    name: "City Zoo",
+    address: "100 Zoo Ln, San Diego, CA 92101",
+    distance: "6.3 Km",
+  },
+  {
+    id: "13",
+    name: "Business District",
+    address: "700 Financial Way, Chicago, IL 60606",
+    distance: "2.7 Km",
+  },
+  {
+    id: "14",
+    name: "Suburban Residential Area",
+    address: "1000 Elm St, Suburbia, NY 12345",
+    distance: "8.2 Km",
+  },
+  {
+    id: "15",
+    name: "Amusement Park",
+    address: "123 Fun St, Orlando, FL 32801",
+    distance: "10.4 Km",
+  },
+  {
+    id: "16",
+    name: "Civic Center",
+    address: "300 City Hall Square, Boston, MA 02109",
+    distance: "2.3 Km",
+  },
+  {
+    id: "17",
+    name: "Historic District",
+    address: "500 Heritage Blvd, Charleston, SC 29401",
+    distance: "4.1 Km",
+  },
+  {
+    id: "18",
+    name: "Convention Center",
+    address: "789 Conference Way, Las Vegas, NV 89109",
+    distance: "6.9 Km",
+  },
+  {
+    id: "19",
+    name: "Waterfront Promenade",
+    address: "200 Pier Ave, Seattle, WA 98101",
+    distance: "3.9 Km",
+  },
+  {
+    id: "20",
+    name: "Garden Park",
+    address: "600 Bloom St, Portland, OR 97201",
+    distance: "5.7 Km",
+  },
 ];
 
-
 export const driverReviews = [
-    {
-        id: "1",
-        name: "Maria Thompson",
-        avatar: images.user1,
-        description: "My ride with this driver was fantastic! They were punctual, courteous, and got me to my destination safely. Highly recommended! 😍",
-        rating: 4.8,
-        avgRating: 5,
-        date: "2024-03-23T04:52:06.501Z",
-        numLikes: 948
-    },
-    {
-        id: "2",
-        name: "Ethan Harris",
-        avatar: images.user2,
-        description: "I had a great experience with this driver. They were friendly and the ride was smooth. Would definitely ride with them again.",
-        rating: 4.7,
-        avgRating: 5,
-        date: "2024-03-23T04:52:06.501Z",
-        numLikes: 120
-    },
-    {
-        id: "3",
-        name: "Sophia Martinez",
-        avatar: images.user3,
-        description: "Amazing service! The driver was professional and the car was clean and comfortable. Will definitely be booking with them again!",
-        rating: 4.7,
-        avgRating: 5,
-        date: "2024-03-23T04:52:06.501Z",
-        numLikes: 89
-    },
-    {
-        id: "4",
-        name: "Michael Johnson",
-        avatar: images.user4,
-        description: "Had a pleasant ride with this driver. They knew the routes well and the ride was hassle-free. Thank you!",
-        rating: 4,
-        avgRating: 4,
-        date: "2024-03-23T04:52:06.501Z",
-        numLikes: 384
-    },
-    {
-        id: "5",
-        name: "Emma Wilson",
-        avatar: images.user5,
-        description: "The driver was polite and the ride was enjoyable. Arrived at my destination on time without any issues. Would recommend.",
-        rating: 4.3,
-        avgRating: 4,
-        date: "2024-03-23T04:52:06.501Z",
-        numLikes: 738
-    },
-    {
-        id: "6",
-        name: "Oliver Brown",
-        avatar: images.user6,
-        description: "Excellent service! The driver was friendly and accommodating. Made my journey stress-free. Will be booking with them again in the future!",
-        rating: 4.8,
-        avgRating: 5,
-        date: "2024-03-23T04:52:06.501Z",
-        numLikes: 12
-    },
-    {
-        id: "7",
-        name: "Isabella White",
-        avatar: images.user7,
-        description: "Absolutely top-notch service! The driver was professional and the ride was comfortable. Highly impressed and will definitely ride with them again!",
-        rating: 4.9,
-        avgRating: 5,
-        date: "2024-03-23T04:52:06.501Z",
-        numLikes: 450
-    }
+  {
+    id: "1",
+    name: "Maria Thompson",
+    avatar: images.user1,
+    description:
+      "My ride with this driver was fantastic! They were punctual, courteous, and got me to my destination safely. Highly recommended! 😍",
+    rating: 4.8,
+    avgRating: 5,
+    date: "2024-03-23T04:52:06.501Z",
+    numLikes: 948,
+  },
+  {
+    id: "2",
+    name: "Ethan Harris",
+    avatar: images.user2,
+    description:
+      "I had a great experience with this driver. They were friendly and the ride was smooth. Would definitely ride with them again.",
+    rating: 4.7,
+    avgRating: 5,
+    date: "2024-03-23T04:52:06.501Z",
+    numLikes: 120,
+  },
+  {
+    id: "3",
+    name: "Sophia Martinez",
+    avatar: images.user3,
+    description:
+      "Amazing service! The driver was professional and the car was clean and comfortable. Will definitely be booking with them again!",
+    rating: 4.7,
+    avgRating: 5,
+    date: "2024-03-23T04:52:06.501Z",
+    numLikes: 89,
+  },
+  {
+    id: "4",
+    name: "Michael Johnson",
+    avatar: images.user4,
+    description:
+      "Had a pleasant ride with this driver. They knew the routes well and the ride was hassle-free. Thank you!",
+    rating: 4,
+    avgRating: 4,
+    date: "2024-03-23T04:52:06.501Z",
+    numLikes: 384,
+  },
+  {
+    id: "5",
+    name: "Emma Wilson",
+    avatar: images.user5,
+    description:
+      "The driver was polite and the ride was enjoyable. Arrived at my destination on time without any issues. Would recommend.",
+    rating: 4.3,
+    avgRating: 4,
+    date: "2024-03-23T04:52:06.501Z",
+    numLikes: 738,
+  },
+  {
+    id: "6",
+    name: "Oliver Brown",
+    avatar: images.user6,
+    description:
+      "Excellent service! The driver was friendly and accommodating. Made my journey stress-free. Will be booking with them again in the future!",
+    rating: 4.8,
+    avgRating: 5,
+    date: "2024-03-23T04:52:06.501Z",
+    numLikes: 12,
+  },
+  {
+    id: "7",
+    name: "Isabella White",
+    avatar: images.user7,
+    description:
+      "Absolutely top-notch service! The driver was professional and the ride was comfortable. Highly impressed and will definitely ride with them again!",
+    rating: 4.9,
+    avgRating: 5,
+    date: "2024-03-23T04:52:06.501Z",
+    numLikes: 450,
+  },
 ];
 
 export const notifications = [
-    {
-        id: "1",
-        icon: icons.chat,
-        title: "Kathryn sent you a message",
-        description: "Tap to see the message",
-        date: "2024-01-16T04:52:06.501Z"
-    },
-    {
-        id: "2",
-        icon: icons.box,
-        title: "Congratulations! Booking Successful!",
-        description: "You have successfully booked a trip for $90. Enjoy the services!",
-        date: "2024-01-23T04:52:06.501Z"
-    },
-    {
-        id: "3",
-        icon: icons.chat,
-        title: "New Services Available!",
-        description: "You can now make multiple book trip at once. You can also cancel your booking.",
-        date: "2024-01-23T08:52:06.501Z"
-    },
-    {
-        id: "4",
-        icon: icons.discount,
-        title: "Get 20% Discount for your next booking!",
-        description: "For all bookings without requirements",
-        date: "2024-01-28T08:52:06.501Z"
-    },
-    {
-        id: "5",
-        icon: icons.chat,
-        title: "New Category events available!",
-        description: "We have added New Service. Enjoy our new service!",
-        date: "2024-01-29T08:52:06.501Z"
-    },
-    {
-        id: "6",
-        icon: icons.box,
-        title: "Credit card successfully connected!",
-        description: "Credit card has been successfully linked!",
-        date: "2024-01-23T04:52:06.501Z"
-    },
-    {
-        id: "7",
-        icon: icons.chat,
-        title: "Julia sent you a message",
-        description: "Tap to see the message",
-        date: "2024-01-16T04:52:06.501Z"
-    },
-    {
-        id: "8",
-        icon: icons.chat,
-        title: "Joanna sent you a message",
-        description: "Tap to see the message",
-        date: "2024-01-16T04:52:06.501Z"
-    },
-    {
-        id: "9",
-        icon: icons.chat,
-        title: "Lilia sent you a message",
-        description: "Tap to see the message",
-        date: "2024-01-16T04:52:06.501Z"
-    },
-    {
-        id: "10",
-        icon: icons.box,
-        title: "Account Setup Successfully",
-        description: "Your account has been created!",
-        date: "2024-01-28T04:52:06.501Z"
-    },
-    {
-        id: "11",
-        icon: icons.discount,
-        title: "Get 50% Discount for First Trip!",
-        description: "For all transaction without requirements",
-        date: "2024-01-28T08:52:06.501Z"
-    },
-    {
-        id: "12",
-        icon: icons.chat,
-        title: "Mily sent you a message",
-        description: "Tap to see the message",
-        date: "2024-01-31T04:52:06.501Z"
-    },
+  {
+    id: "1",
+    icon: icons.chat,
+    title: "Kathryn sent you a message",
+    description: "Tap to see the message",
+    date: "2024-01-16T04:52:06.501Z",
+  },
+  {
+    id: "2",
+    icon: icons.box,
+    title: "Congratulations! Booking Successful!",
+    description:
+      "You have successfully booked a trip for $90. Enjoy the services!",
+    date: "2024-01-23T04:52:06.501Z",
+  },
+  {
+    id: "3",
+    icon: icons.chat,
+    title: "New Services Available!",
+    description:
+      "You can now make multiple book trip at once. You can also cancel your booking.",
+    date: "2024-01-23T08:52:06.501Z",
+  },
+  {
+    id: "4",
+    icon: icons.discount,
+    title: "Get 20% Discount for your next booking!",
+    description: "For all bookings without requirements",
+    date: "2024-01-28T08:52:06.501Z",
+  },
+  {
+    id: "5",
+    icon: icons.chat,
+    title: "New Category events available!",
+    description: "We have added New Service. Enjoy our new service!",
+    date: "2024-01-29T08:52:06.501Z",
+  },
+  {
+    id: "6",
+    icon: icons.box,
+    title: "Credit card successfully connected!",
+    description: "Credit card has been successfully linked!",
+    date: "2024-01-23T04:52:06.501Z",
+  },
+  {
+    id: "7",
+    icon: icons.chat,
+    title: "Julia sent you a message",
+    description: "Tap to see the message",
+    date: "2024-01-16T04:52:06.501Z",
+  },
+  {
+    id: "8",
+    icon: icons.chat,
+    title: "Joanna sent you a message",
+    description: "Tap to see the message",
+    date: "2024-01-16T04:52:06.501Z",
+  },
+  {
+    id: "9",
+    icon: icons.chat,
+    title: "Lilia sent you a message",
+    description: "Tap to see the message",
+    date: "2024-01-16T04:52:06.501Z",
+  },
+  {
+    id: "10",
+    icon: icons.box,
+    title: "Account Setup Successfully",
+    description: "Your account has been created!",
+    date: "2024-01-28T04:52:06.501Z",
+  },
+  {
+    id: "11",
+    icon: icons.discount,
+    title: "Get 50% Discount for First Trip!",
+    description: "For all transaction without requirements",
+    date: "2024-01-28T08:52:06.501Z",
+  },
+  {
+    id: "12",
+    icon: icons.chat,
+    title: "Mily sent you a message",
+    description: "Tap to see the message",
+    date: "2024-01-31T04:52:06.501Z",
+  },
 ];
 
 export const userAddresses = [
-    {
-        id: "1",
-        name: "Home",
-        address: "364 Stillwater Ave, Attleboro, MA 02703",
-    },
-    {
-        id: "2",
-        name: "Office",
-        address: "73 Virginia Rd, Cuyahoga Falls, OH 44221",
-    },
-    {
-        id: "3",
-        name: "Mall Plaza",
-        address: "123 Main St, San Francisco, CA 94107",
-    },
-    {
-        id: "4",
-        name: "Garden Park",
-        address: "600 Bloom St, Portland, OR 97201",
-    },
-    {
-        id: "5",
-        name: "Grand City Park",
-        address: "26 State St Daphne, AL 36526"
-    },
-    {
-        id: "6",
-        name: "Town Square",
-        address: "20 Applegate St. Hoboken, NJ 07030"
-    },
-    {
-        id: "7",
-        name: "Bank",
-        address: "917 W Pine Street Easton, PA 0423"
-    }
-]
+  {
+    id: "1",
+    name: "Home",
+    address: "364 Stillwater Ave, Attleboro, MA 02703",
+  },
+  {
+    id: "2",
+    name: "Office",
+    address: "73 Virginia Rd, Cuyahoga Falls, OH 44221",
+  },
+  {
+    id: "3",
+    name: "Mall Plaza",
+    address: "123 Main St, San Francisco, CA 94107",
+  },
+  {
+    id: "4",
+    name: "Garden Park",
+    address: "600 Bloom St, Portland, OR 97201",
+  },
+  {
+    id: "5",
+    name: "Grand City Park",
+    address: "26 State St Daphne, AL 36526",
+  },
+  {
+    id: "6",
+    name: "Town Square",
+    address: "20 Applegate St. Hoboken, NJ 07030",
+  },
+  {
+    id: "7",
+    name: "Bank",
+    address: "917 W Pine Street Easton, PA 0423",
+  },
+];

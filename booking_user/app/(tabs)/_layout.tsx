@@ -67,49 +67,6 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="bookings"
-        options={{
-          title: "",
-          tabBarIcon: ({ focused }: { focused: boolean }) => {
-            return (
-              <View
-                style={{
-                  alignItems: "center",
-                  paddingTop: 16,
-                  width: SIZES.width / 4,
-                }}
-              >
-                <Image
-                  source={focused ? icons.document : icons.documentOutline}
-                  contentFit="contain"
-                  style={{
-                    width: 24,
-                    height: 24,
-                    tintColor: focused
-                      ? COLORS.primary
-                      : dark
-                      ? COLORS.gray3
-                      : COLORS.gray3,
-                  }}
-                />
-                <Text
-                  style={{
-                    ...FONTS.body4,
-                    color: focused
-                      ? COLORS.primary
-                      : dark
-                      ? COLORS.gray3
-                      : COLORS.gray3,
-                  }}
-                >
-                  Bookings
-                </Text>
-              </View>
-            );
-          },
-        }}
-      />
-      <Tabs.Screen
         name="inbox"
         options={{
           title: "",
@@ -154,6 +111,50 @@ const TabLayout = () => {
           },
         }}
       />
+      <Tabs.Screen
+        name="bookings"
+        options={{
+          title: "",
+          tabBarIcon: ({ focused }: { focused: boolean }) => {
+            return (
+              <View
+                style={{
+                  alignItems: "center",
+                  paddingTop: 16,
+                  width: SIZES.width / 4,
+                }}
+              >
+                <Image
+                  source={focused ? icons.document : icons.documentOutline}
+                  contentFit="contain"
+                  style={{
+                    width: 24,
+                    height: 24,
+                    tintColor: focused
+                      ? COLORS.primary
+                      : dark
+                      ? COLORS.gray3
+                      : COLORS.gray3,
+                  }}
+                />
+                <Text
+                  style={{
+                    ...FONTS.body4,
+                    color: focused
+                      ? COLORS.primary
+                      : dark
+                      ? COLORS.gray3
+                      : COLORS.gray3,
+                  }}
+                >
+                  Bookings
+                </Text>
+              </View>
+            );
+          },
+        }}
+      />
+
       <Tabs.Screen
         name="profile"
         options={{
