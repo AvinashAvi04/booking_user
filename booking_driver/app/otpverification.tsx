@@ -87,7 +87,7 @@ const OTPVerification = () => {
           title="Verify"
           filled
           style={styles.button}
-          onPress={() => router.push("/(tabs)")}
+          onPress={() => router.push("/editprofile")}
         />
       </View>
     </SafeAreaView>
