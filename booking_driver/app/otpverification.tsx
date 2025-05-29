@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../components/Header";
@@ -60,16 +66,24 @@ const OTPVerification = () => {
             }}
           />
           <View style={styles.codeContainer}>
-            <Text
-              style={[
-                styles.code,
-                {
-                  color: dark ? COLORS.white : COLORS.greyscale900,
-                },
-              ]}
+            <TouchableOpacity
+              disabled={time > 0}
+              style={{ padding: 8, paddingRight: 0 }}
+              onPress={() => {
+                if (time === 0) setTime(50);
+              }}
             >
-              Resend code in
-            </Text>
+              <Text
+                style={[
+                  styles.code,
+                  {
+                    color: dark ? COLORS.white : COLORS.greyscale900,
+                  },
+                ]}
+              >
+                Resend code in
+              </Text>
+            </TouchableOpacity>
             <Text style={styles.time}>{`  ${time} `}</Text>
             <Text
               style={[
@@ -87,7 +101,7 @@ const OTPVerification = () => {
           title="Verify"
           filled
           style={styles.button}
-          onPress={() => router.push("/(tabs)")}
+          onPress={() => router.push({pathname: "/editprofile", params:params})}
         />
       </View>
     </SafeAreaView>

@@ -22,7 +22,8 @@ import {
 import { useTheme } from "@/theme/ThemeProvider";
 import Button from "../../components/Button";
 import Input from "@/components/Input";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { icons } from "@/constants";
 
 type ThemeColors = {
   primary: string;
@@ -36,11 +37,13 @@ type ThemeColors = {
 type TabType = "oneWay" | "roundTrip" | "local" | "airport";
 
 const BookingForm = () => {
-  const router = useRouter();
+  const { userType, isSignup, phone, email } = useLocalSearchParams();
+  const isFirstTimeUser = isSignup === "true";
   const [activeTab, setActiveTab] = useState<TabType>("oneWay");
-  const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(true);
+  const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(isFirstTimeUser);
   const [userName, setUserName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
+  const [userPhone, setUserPhone] = useState<string>("");
+  const [userEmail, setUserEmail] = useState<string>(""); 
   const { colors } = useTheme() as { colors: ThemeColors };
   const styles = createStyles(colors);
 
@@ -149,15 +152,25 @@ const BookingForm = () => {
               onInputChanged={(id, text) => setUserName(text)}
               autoFocus
               style={styles.input}
+              icon={icons.user}
             />
             <Input
-              id="email"
-              placeholder="Enter your email"
+              id={email ? "phone" : "email"}
+              placeholder={email ? "Enter your phone number" : "Enter your email"}
               placeholderTextColor={colors.textSecondary || colors.text}
-              value={email}
-              onInputChanged={(id, text) => setEmail(text)}
+              value={email ? userPhone : userEmail}
+              onInputChanged={(id, text) => {
+                if (email) {
+                  setUserPhone(text);
+                } else {
+                  setUserEmail(text);
+                }
+              }}
               autoFocus
               style={styles.input}
+              keyboardType={email ? "phone-pad" : "email-address"}
+              autoCapitalize="none"
+              icon={email ? icons.call : icons.email}
             />
           </View>
 

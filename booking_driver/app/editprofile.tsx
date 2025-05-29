@@ -31,8 +31,9 @@ import Button from "../components/Button";
 import RNPickerSelect from "react-native-picker-select";
 import { useTheme } from "../theme/ThemeProvider";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import Input2 from "@/components/Input2";
+import { MaterialIcons } from "@expo/vector-icons";
 
 interface Item {
   flag: string;
@@ -64,6 +65,10 @@ const initialState = {
 
 // edit profile screen
 const EditProfile = () => {
+  const { isSignup } = useLocalSearchParams();
+  const isFirstTimeUser = isSignup === "true";
+  const [showWelcomeModal, setShowWelcomeModal] = useState(isFirstTimeUser);
+  const [userName, setUserName] = useState("");
   const [image, setImage] = useState<any>(null);
   const [error, setError] = useState();
   const [formState, dispatchFormState] = useReducer(reducer, initialState);
@@ -72,8 +77,74 @@ const EditProfile = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
   const [selectedGender, setSelectedGender] = useState("");
-  const { dark } = useTheme();
+  const { dark, colors } = useTheme();
   const router = useRouter();
+
+  const handleWelcomeSubmit = () => {
+    if (!userName.trim()) {
+      Alert.alert("Name Required", "Please enter your name to continue");
+      return;
+    }
+    setShowWelcomeModal(false);
+  };
+
+  const renderWelcomeModal = () => (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={showWelcomeModal}
+      onRequestClose={() => {}}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={[styles.modalContent, { backgroundColor: colors.background }]}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setShowWelcomeModal(false)}
+          >
+            <Text style={[styles.closeButtonText, { color: colors.text }]}>
+              ×
+            </Text>
+          </TouchableOpacity>
+
+          <MaterialIcons
+            name="account-circle"
+            size={48}
+            color={colors.primary}
+            style={styles.icon}
+          />
+
+          <Text style={[styles.modalTitle, { color: colors.text }]}>
+            Welcome to Our App! 👋
+          </Text>
+
+          <View style={styles.contentContainer}>
+            <Text style={[styles.modalSubtitle, { color: colors.text }]}>
+              We're excited to have you on board. Please tell us your name to
+              get started.
+            </Text>
+            <Input
+              id="userName"
+              placeholder="Enter your name"
+              placeholderTextColor={colors.text}
+              value={userName}
+              onInputChanged={(id, text) => setUserName(text)}
+              autoFocus
+              style={styles.input}
+              icon={icons.user}
+            />
+          </View>
+
+          <Button
+            title="Continue"
+            onPress={handleWelcomeSubmit}
+            style={styles.submitButton}
+            filled
+            textColor="white"
+          />
+        </View>
+      </View>
+    </Modal>
+  );
 
   const genderOptions = [
     { label: "Male", value: "male" },
@@ -237,6 +308,7 @@ const EditProfile = () => {
         { backgroundColor: dark ? COLORS.dark1 : COLORS.white },
       ]}
     >
+      {renderWelcomeModal()}
       <View
         style={[
           styles.container,
@@ -430,6 +502,57 @@ const AadharImageUploaderProps = ({
 };
 
 const styles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.85)",
+    padding: SIZES.padding * 2,
+  },
+  modalContent: {
+    width: "100%",
+    padding: SIZES.padding * 2.5,
+    borderRadius: SIZES.radius,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  closeButton: {
+    position: "absolute",
+    top: SIZES.padding,
+    right: SIZES.padding,
+    zIndex: 1,
+  },
+  closeButtonText: {
+    fontSize: 28,
+    fontWeight: "bold",
+  },
+  icon: {
+    marginBottom: SIZES.padding,
+  },
+  titleWithIcon: {
+    marginTop: -SIZES.padding,
+  },
+  modalTitle: {
+    ...FONTS.h3,
+    marginBottom: SIZES.padding,
+    textAlign: "center",
+  },
+  modalSubtitle: {
+    ...FONTS.body4,
+    textAlign: "center",
+    marginBottom: SIZES.padding * 1.5,
+  },
+  contentContainer: {
+    width: "100%",
+    marginBottom: SIZES.padding * 1.5,
+  },
+  submitButton: {
+    width: "100%",
+  },
   area: { flex: 1, backgroundColor: COLORS.white },
   container: { flex: 1, padding: 16, backgroundColor: COLORS.white },
   avatarContainer: {
@@ -473,6 +596,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     marginVertical: 10,
+    marginBottom: SIZES.padding,
     height: 40,
     fontSize: 14,
     color: "#111",
