@@ -6,6 +6,7 @@ import {
   Image,
   Alert,
   TouchableOpacity,
+  Keyboard
 } from "react-native";
 import React, { useCallback, useEffect, useReducer, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -46,9 +47,11 @@ const Login = () => {
   const [error, setError] = useState(null);
   const [isChecked, setChecked] = useState(false);
   const { colors, dark } = useTheme();
+  const [mobileTouched, setMobileTouched] = useState(false);
 
   const inputChangedHandler = useCallback(
     (inputId: string, inputValue: string) => {
+      if (inputId === "mobile" && !mobileTouched) setMobileTouched(true);
       const result = validateInput(inputId, inputValue);
       dispatchFormState({
         inputId,
@@ -56,7 +59,7 @@ const Login = () => {
         inputValue,
       });
     },
-    [dispatchFormState]
+    [dispatchFormState, mobileTouched]
   );
 
   useEffect(() => {
@@ -99,29 +102,9 @@ const Login = () => {
   }, [formState.inputValues.mobile]);
 
   const handleLogin = () => {
+    Keyboard.dismiss()
     if (!isMobileValid()) return;
-
-    // Here you would typically make an API call to check if user exists
-    // For now, we'll assume user exists and navigate to enter password
-    let existingUser = false;
-
-    if (existingUser) {
-      router.push({
-        pathname: "/enterpassword",
-        params: {
-          mobile: formState.inputValues.mobile,
-          existingUser: "true",
-        },
-      });
-    } else {
-      router.push({
-        pathname: "/enterpassword",
-        params: {
-          mobile: formState.inputValues.mobile,
-          existingUser: "false",
-        },
-      });
-    }
+    router.push("/otpverification");
   };
 
   return (
@@ -142,7 +125,9 @@ const Login = () => {
         ]}
       >
         {/* <Header title="" /> */}
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+        keyboardShouldPersistTaps='handled' 
+        showsVerticalScrollIndicator={false}>
           <View style={styles.logoContainer}>
             <Image
               source={images.logo}
@@ -163,39 +148,13 @@ const Login = () => {
           <Input
             id="mobile"
             onInputChanged={inputChangedHandler}
-            // errorText={formState.inputValidities["mobile"]}
+            errorText={mobileTouched ? formState.inputValidities.mobile : undefined}
             placeholder="Enter Your 10 Digit Mobile Number..."
             placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
             icon={icons.telephone}
             keyboardType="phone-pad"
             maxLength={10}
           />
-          {/* Password input is commented out for now
-          <Input
-            onInputChanged={inputChangedHandler}
-            errorText={formState.inputValidities["password"]}
-            autoCapitalize="none"
-            id="password"
-            placeholder="Password"
-            placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
-            icon={icons.padlock}
-            secureTextEntry={true}
-          /> */}
-          {/* <View style={styles.checkBoxContainer}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Checkbox
-                                style={styles.checkbox}
-                                value={isChecked}
-                                color={isChecked ? COLORS.primary : dark ? COLORS.primary : "gray"}
-                                onValueChange={setChecked}
-                            />
-                            <View style={{ flex: 1 }}>
-                                <Text style={[styles.privacy, {
-                                    color: dark ? COLORS.white : COLORS.black
-                                }]}>Remenber me</Text>
-                            </View>
-                        </View>
-                    </View> */}
           <Button
             title="Login"
             filled
@@ -203,42 +162,12 @@ const Login = () => {
             style={[styles.button, !isMobileValid() && { opacity: 0.7 }]}
             disabled={!isMobileValid()}
           />
-          {/* <TouchableOpacity onPress={() => navigate("forgotpasswordmethods")}>
-            <Text style={styles.forgotPasswordBtnText}>
-              Forgot the password?
-            </Text>
-          </TouchableOpacity> */}
-          {/* <View>
-            <OrSeparator text="or continue with" />
-            <View style={styles.socialBtnContainer}>
-              <SocialButton
-                icon={icons.appleLogo}
-                onPress={appleAuthHandler}
-                tintColor={dark ? COLORS.white : COLORS.black}
-              />
-              <SocialButton
-                icon={icons.facebook}
-                onPress={facebookAuthHandler}
-              />
-              <SocialButton icon={icons.google} onPress={googleAuthHandler} />
-            </View>
-          </View> */}
         </ScrollView>
-        {/* <View style={styles.bottomContainer}>
-          <Text
-            style={[
-              styles.bottomLeft,
-              {
-                color: dark ? COLORS.white : COLORS.black,
-              },
-            ]}
-          >
-            Don't have an account ?
+        <TouchableOpacity onPress={() => router.replace('/emaillogin')} style={{ alignSelf: 'center', marginBottom: 24 }}>
+          <Text style={{ color: COLORS.primary, fontSize: 18, fontFamily: 'medium', textDecorationLine: 'underline'}}>
+            Login using Email
           </Text>
-          <TouchableOpacity onPress={() => navigate("signup")}>
-            <Text style={styles.bottomRight}>{"  "}Sign Up</Text>
-          </TouchableOpacity>
-        </View> */}
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

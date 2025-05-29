@@ -37,7 +37,7 @@ const Onboarding1 = () => {
         </Text>
         <TouchableOpacity
           style={{ position: "absolute", bottom: 20, right: 20 }}
-          onPress={() => navigate("login")}
+          onPress={() => navigate("phonelogin")}
         >
           <Text style={{ color: COLORS.white, fontSize: 16 }}>Go To Login</Text>
         </TouchableOpacity>

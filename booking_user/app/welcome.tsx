@@ -33,7 +33,7 @@ const Welcome = () => {
                         color: dark ? COLORS.white : "black"
                     }]}>Already have account? </Text>
                     <TouchableOpacity
-                        onPress={() => navigate("login")}>
+                        onPress={() => navigate("phonelogin")}>
                         <Text style={styles.loginSubtitle}>Log In</Text>
                     </TouchableOpacity>
                 </View>
@@ -44,7 +44,7 @@ const Welcome = () => {
                 }]}>
                     By continuing, you accept the Terms Of Use and
                 </Text>
-                <TouchableOpacity onPress={() => navigate("login")}>
+                <TouchableOpacity onPress={() => navigate("phonelogin")}>
                     <Text style={[styles.bottomSubtitle, {
                         color: dark ? COLORS.white : COLORS.black
                     }]}>Privacy Policy.</Text>

@@ -1,577 +1,258 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, TextInput, View, ScrollView, Animated, Image, TouchableOpacity, Dimensions, Platform, Modal, TouchableWithoutFeedback } from "react-native";
-import MapView, { Marker } from "react-native-maps";
-import { Ionicons } from "@expo/vector-icons";
-import { mapDarkStyle, mapStandardStyle, markers } from '@/data/mapData';
-import { COLORS, icons, illustrations, SIZES } from '@/constants';
-import Button from '@/components/Button';
-import StarRating2 from '@/components/StarRating2';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
+  Modal,
+  Alert,
+} from 'react-native';
+import { SIZES, FONTS, COLORS } from '../../constants/theme';
+import { OneWayForm, RoundTripForm, LocalForm, AirportForm } from '../../components/BookingForms';
 import { useTheme } from '@/theme/ThemeProvider';
-import { useFocusEffect, useRouter } from 'expo-router';
+import Button from '../../components/Button';
+import Input from '@/components/Input';
+import { useRouter } from 'expo-router';
 
-const { width } = Dimensions.get("window");
-const CARD_HEIGHT = 112;
-const CARD_WIDTH = width * 0.85;
-const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
+type ThemeColors = {
+  primary: string;
+  text: string;
+  background: string;
+  card?: string;
+  border?: string;
+  textSecondary?: string;
+};
 
-const isExistingUser = false;
+type TabType = 'oneWay' | 'roundTrip' | 'local' | 'airport';
 
-const Home = () => {
-  const [isFavourite, setIsFavourite] = useState(false);
-  const [modalVisible, setModalVisible] = useState(true);
-  const [directionModalVisible, setDirectionModalVisible] = useState(false);
-  const { dark } = useTheme();
+const BookingForm = () => {
   const router = useRouter();
+  const [activeTab, setActiveTab] = useState<TabType>('oneWay');
+  const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(true);
+  const [userName, setUserName] = useState<string>('');
+  const { colors } = useTheme() as { colors: ThemeColors };
+  const styles = createStyles(colors);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      if (!isExistingUser) {
-        router.replace('/editprofile');
-      }
-    }, [isExistingUser])
+  const handleWelcomeSubmit = () => {
+    if (!userName.trim()) {
+      Alert.alert('Name Required', 'Please enter your name to continue');
+      return;
+    }
+    setShowWelcomeModal(false);
+    Alert.alert(`Welcome, ${userName}!`, 'Enjoy your ride with us!');
+  };
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'oneWay':
+        return (
+          <View style={styles.tabContent}>
+            <OneWayForm />
+          </View>
+        );
+      case 'roundTrip':
+        return (
+          <View style={styles.tabContent}>
+            <RoundTripForm />
+          </View>
+        );
+      case 'local':
+        return (
+          <View style={styles.tabContent}>
+            <LocalForm />
+          </View>
+        );
+      case 'airport':
+        return (
+          <View style={styles.tabContent}>
+            <AirportForm />
+          </View>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const TabButton = ({ label, isActive, onPress }: { label: string; isActive: boolean; onPress: () => void }) => (
+    <TouchableOpacity
+      style={[styles.tabButton, isActive && styles.activeTabButton]}
+      onPress={onPress}
+      activeOpacity={0.7}
+    >
+      <Text style={[styles.tabButtonText, isActive && styles.activeTabButtonText]}>{label}</Text>
+    </TouchableOpacity>
   );
 
-  const initialMapState = {
-    markers,
-    region: {
-      latitude: 22.62938671242907,
-      longitude: 88.4354486029795,
-      latitudeDelta: 0.04864195044303443,
-      longitudeDelta: 0.040142817690068,
-    },
-  };
+  const renderWelcomeModal = () => (
+    <Modal animationType="slide" transparent={true} visible={showWelcomeModal} onRequestClose={() => {}}>
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Welcome to Our App! 👋</Text>
+          <Text style={styles.modalSubtitle}>
+            We're excited to have you on board. Please tell us your name to get started.
+          </Text>
 
-  const [state, setState] = React.useState(initialMapState);
-
-  let mapIndex = 0;
-  let mapAnimation = new Animated.Value(0);
-
-  const _map = useRef<any>(null);
-  const _scrollView = useRef<any>(null);
-
-  useEffect(() => {
-    mapAnimation.addListener(({ value }) => {
-      let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
-      if (index >= state.markers.length) {
-        index = state.markers.length - 1;
-      }
-      if (index <= 0) {
-        index = 0;
-      }
-
-      const regionTimeout = setTimeout(() => {
-        if (mapIndex !== index) {
-          mapIndex = index;
-          const { coordinate } = state.markers[index];
-          _map.current.animateToRegion(
-            {
-              ...coordinate,
-              latitudeDelta: state.region.latitudeDelta,
-              longitudeDelta: state.region.longitudeDelta,
-            },
-            350
-          );
-        }
-      }, 10);
-
-      clearTimeout(regionTimeout);
-    });
-
-  });
-
-  const interpolations = state.markers.map((marker, index) => {
-    const inputRange = [
-      (index - 1) * CARD_WIDTH,
-      index * CARD_WIDTH,
-      ((index + 1) * CARD_WIDTH),
-    ];
-
-    const scale = mapAnimation.interpolate({
-      inputRange,
-      outputRange: [1, 1.5, 1],
-      extrapolate: "clamp"
-    });
-
-    return { scale };
-  });
-
-  const onMarkerPress = (mapEventData: any) => {
-    const markerID = mapEventData._targetInst.return.key;
-
-    let x = (markerID * CARD_WIDTH) + (markerID * 20);
-    if (Platform.OS === 'ios') {
-      x = x - SPACING_FOR_CARD_INSET;
-    }
-
-    _scrollView.current.scrollTo({ x: x, y: 0, animated: true });
-  }
-
-  const handleInputFocus = () => {
-    // Redirect to another screen
-    router.push('/search');
-  };
-
-  const renderDirectionModal = () => {
-    return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={directionModalVisible}>
-        <TouchableWithoutFeedback
-          onPress={() => setDirectionModalVisible(false)}>
-          <View style={styles.modalContainer}>
-            <View style={[styles.modalSubContainer,
-            {
-              height: 420,
-              width: SIZES.width * 0.8,
-              backgroundColor: dark ? COLORS.dark2 : COLORS.white,
-            }]}>
-              <View style={styles.backgroundIllustration}>
-                <Image
-                  source={illustrations.background}
-                  resizeMode='contain'
-                  style={styles.modalIllustration}
-                />
-                <Image
-                  source={icons.location2}
-                  resizeMode='contain'
-                  style={styles.editPencilIcon}
-                />
-              </View>
-              <Text style={[styles.modalTitle, {
-                color: dark ? COLORS.primary : COLORS.greyscale900,
-              }]}>You have arrived at your destination!</Text>
-              <Text style={[styles.modalSubtitle, {
-                color: dark ? COLORS.white : COLORS.black,
-              }]}>
-                See your on your next trip!
-              </Text>
-              <Button
-                title="Okay"
-                filled
-                onPress={() => {
-                  setDirectionModalVisible(false)
-                }}
-                style={styles.successBtn}
-              />
-            </View>
+          <View style={styles.inputContainer}>
+            <Input
+              id="userName"
+              placeholder="Enter your name"
+              placeholderTextColor={colors.textSecondary || colors.text}
+              value={userName}
+              onInputChanged={(id, text) => setUserName(text)}
+              autoFocus
+              style={styles.input}
+            />
           </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-    )
-  }
 
-  // Render modal
-  const renderModal = () => {
-    return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}>
-        <TouchableWithoutFeedback
-          onPress={() => setModalVisible(false)}>
-          <View style={styles.modalContainer}>
-            <View style={[styles.modalSubContainer, {
-              backgroundColor: dark ? COLORS.dark2 : COLORS.white,
-            }]}>
-              <View style={styles.backgroundIllustration}>
-                <Image
-                  source={illustrations.background}
-                  resizeMode='contain'
-                  style={styles.modalIllustration}
-                />
-                <Image
-                  source={icons.location2}
-                  resizeMode='contain'
-                  style={styles.editPencilIcon}
-                />
-              </View>
-              <Text style={[styles.modalTitle, {
-                color: dark ? COLORS.primary : COLORS.greyscale900,
-              }]}>Enable Location</Text>
-              <Text style={[styles.modalSubtitle, {
-                color: dark ? COLORS.white : COLORS.black,
-              }]}>
-                We need location access to find the nearest taxi around you.
-              </Text>
-              <Button
-                title="Enable location"
-                filled
-                onPress={() => {
-                  setModalVisible(false)
-                }}
-                style={styles.successBtn}
-              />
-              <Button
-                title="Cancel"
-                onPress={() => {
-                  setModalVisible(false)
-                }}
-                textColor={dark ? COLORS.white : COLORS.black}
-                style={{
-                  width: "100%",
-                  marginTop: 12,
-                  borderRadius: 32,
-                  backgroundColor: dark ? COLORS.dark3 : COLORS.tansparentPrimary,
-                  borderColor: dark ? COLORS.dark3 : COLORS.tansparentPrimary
-                }}
-              />
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-    )
-  }
+          <Button 
+            title="Continue" 
+            onPress={handleWelcomeSubmit} 
+            style={styles.continueButton} 
+            textColor="white"
+          />
+        </View>
+      </View>
+    </Modal>
+  );
 
   return (
-    <View style={styles.container}>
-      <MapView
-        ref={_map}
-        initialRegion={state.region}
-        style={styles.container}
-        customMapStyle={dark ? mapDarkStyle : mapStandardStyle}>
-        {state.markers.map((marker, index) => {
-          const scaleStyle = {
-            transform: [
-              {
-                scale: interpolations[index].scale,
-              },
-            ],
-          };
-          return (
-            <Marker key={index} coordinate={marker.coordinate} onPress={(e) => onMarkerPress(e)}>
-              <Animated.View style={[styles.markerWrap]}>
-                <Animated.Image
-                  source={icons.taxi}
-                  style={[styles.marker, scaleStyle]}
-                  resizeMode="cover"
-                />
-              </Animated.View>
-            </Marker>
-          );
-        })}
-      </MapView>
-
-      <View style={[styles.searchBox, {
-        backgroundColor: dark ? COLORS.dark1 : COLORS.white,
-      }]}>
-        <TextInput
-          placeholder="Where would you go?"
-          placeholderTextColor={dark ? COLORS.white : "#000"}
-          autoCapitalize="none"
-          onFocus={handleInputFocus}
-          style={{
-            flex: 1,
-            padding: 0,
-            fontFamily: "medium"
-          }}
-        />
-        <TouchableOpacity
-          onPress={() => setDirectionModalVisible(true)}
-          style={{
-            width: 58,
-            height: 50,
-            backgroundColor: COLORS.primary,
-            borderTopRightRadius: 25,
-            borderBottomRightRadius: 25,
-            alignItems: "center",
-            justifyContent: "center",
-            top: -10,
-            right: -10
-          }}>
-          <Ionicons name="search" size={20} color={COLORS.white} />
-        </TouchableOpacity>
+    <SafeAreaView style={[styles.container]}>
+      {renderWelcomeModal()}
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Book a Ride</Text>
       </View>
-      <ScrollView
-        horizontal
-        scrollEventThrottle={1}
-        showsHorizontalScrollIndicator={false}
-        style={styles.chipsScrollView}
-        contentInset={{ // iOS only
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 20
-        }}
-        contentContainerStyle={{
-          paddingRight: Platform.OS === 'android' ? 20 : 0
-        }}
-      >
 
-      </ScrollView>
-      <Animated.ScrollView
-        ref={_scrollView}
-        horizontal
-        pagingEnabled
-        scrollEventThrottle={1}
-        showsHorizontalScrollIndicator={false}
-        snapToInterval={CARD_WIDTH + 20}
-        snapToAlignment="center"
-        style={styles.scrollView}
-        contentInset={{
-          top: 0,
-          left: SPACING_FOR_CARD_INSET,
-          bottom: 0,
-          right: SPACING_FOR_CARD_INSET
-        }}
-        contentContainerStyle={{
-          paddingHorizontal: Platform.OS === 'android' ? SPACING_FOR_CARD_INSET : 0
-        }}
-        onScroll={Animated.event(
-          [
-            {
-              nativeEvent: {
-                contentOffset: {
-                  x: mapAnimation,
-                }
-              },
-            },
-          ],
-          { useNativeDriver: true }
-        )}
+      <View style={styles.tabsContainer}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabsScrollView}>
+          <TabButton label="One Way" isActive={activeTab === 'oneWay'} onPress={() => setActiveTab('oneWay')} />
+          <TabButton label="Round Trip" isActive={activeTab === 'roundTrip'} onPress={() => setActiveTab('roundTrip')} />
+          <TabButton label="Local" isActive={activeTab === 'local'} onPress={() => setActiveTab('local')} />
+          <TabButton label="Airport" isActive={activeTab === 'airport'} onPress={() => setActiveTab('airport')} />
+        </ScrollView>
+      </View>
+
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
-        {state.markers.map((marker, index) => (
-          <View style={[styles.card, {
-            backgroundColor: dark ? COLORS.dark1 : COLORS.white,
-          }]} key={index}>
-            <Image
-              source={marker.avatar}
-              style={styles.cardImage}
-              resizeMode="cover"
-            />
-            <TouchableOpacity
-              onPress={() => {
-                setIsFavourite(!isFavourite);
-                setDirectionModalVisible(true);
-              }}
-              style={{
-                position: "absolute",
-                top: 12,
-                right: 12
-              }}
-            >
-              <Ionicons name={isFavourite ? "heart" : "heart-outline"} size={20} color={isFavourite ? COLORS.red : dark ? COLORS.white : COLORS.black} />
-            </TouchableOpacity>
-            <View style={styles.textContent}>
-              <Text numberOfLines={1} style={[styles.cardtitle, {
-                color: dark ? COLORS.white : COLORS.black,
-              }]}>{marker.name}</Text>
-              <StarRating2 ratings={marker.rating} reviews={marker.reviews} />
-              <Text numberOfLines={1} style={[styles.cardDescription, {
-                color: dark ? COLORS.grayscale200 : "#444",
-              }]}>{marker.address}</Text>
-              <Text style={styles.price}>{marker.taxiID}</Text>
-            </View>
-          </View>
-        ))}
-      </Animated.ScrollView>
-      {renderModal()}
-      {renderDirectionModal()}
-    </View>
+        <ScrollView style={styles.contentContainer}>{renderTabContent()}</ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
+const createStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    modalOverlay: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.85)',
+      padding: SIZES.padding * 2,
+    },
+    modalContent: {
+      width: '100%',
+      padding: SIZES.padding * 2.5,
+      borderRadius: SIZES.radius * 1.2,
+      alignItems: 'center',
+      backgroundColor: COLORS.white,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.15,
+      shadowRadius: 12,
+      elevation: 8,
+    },
+    modalTitle: {
+      ...FONTS.h2,
+      marginBottom: SIZES.padding3,
+      textAlign: 'center',
+      color: COLORS.black,
+    },
+    modalSubtitle: {
+      ...FONTS.body4,
+      textAlign: 'center',
+      color: COLORS.grayscale700,
+      marginBottom: SIZES.padding * 1.5,
+      lineHeight: 22,
+    },
+    inputContainer: {
+      width: '100%',
+      marginBottom: SIZES.padding * 1.5,
+      padding: SIZES.padding2
+    },
+    input: {
+      height: 52,
+      borderWidth: 1,
+      borderRadius: SIZES.radius,
+      paddingHorizontal: 30,
+      borderColor: COLORS.greyscale300,
+      backgroundColor: COLORS.white,
+      ...FONTS.body4,
+    },
+    continueButton: {
+      width: '100%',
+      height: 50,
+      borderRadius: SIZES.radius,
+      backgroundColor: COLORS.primary,
+      marginTop: SIZES.padding,
+    },
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      padding: SIZES.padding3,
+      borderBottomWidth: 0.5,
+      backgroundColor: colors.card || colors.background,
+      borderBottomColor: colors.border || '#e0e0e0',
+    },
+    headerTitle: {
+      ...FONTS.h2,
+      textAlign: 'center',
+      color: colors.text,
+    },
+    tabsContainer: {
+      backgroundColor: colors.card || colors.background,
+    },
+    tabsScrollView: {
+      paddingHorizontal: SIZES.padding2,
+    },
+    tabButton: {
+      paddingVertical: SIZES.padding2,
+      paddingHorizontal: SIZES.padding3,
+      marginRight: SIZES.padding,
+      borderBottomWidth: 2,
+      borderBottomColor: 'transparent',
+    },
+    activeTabButton: {
+      borderBottomColor: colors.primary,
+    },
+    tabButtonText: {
+      ...FONTS.body3,
+      color: colors.textSecondary || colors.text,
+    },
+    activeTabButtonText: {
+      color: colors.primary,
+      fontFamily: 'bold',
+    },
+    contentContainer: {
+      flex: 1,
+      paddingHorizontal: SIZES.padding3,
+      backgroundColor: colors.background,
+    },
+    tabContent: {
+      paddingVertical: SIZES.padding3,
+    },
+    tabTitle: {
+      ...FONTS.h3,
+      color: colors.text,
+      marginBottom: SIZES.padding3,
+    },
+  });
 
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  searchBox: {
-    position: 'absolute',
-    marginTop: Platform.OS === 'ios' ? 8 : 20,
-    flexDirection: "row",
-    backgroundColor: '#fff',
-    width: '90%',
-    alignSelf: 'center',
-    borderRadius: 25,
-    padding: 10,
-    shadowColor: '#ccc',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.5,
-    shadowRadius: 5,
-    elevation: 10,
-    top: 52,
-    height: 50
-  },
-  chipsScrollView: {
-    position: 'absolute',
-    top: Platform.OS === 'ios' ? 90 : 80,
-    paddingHorizontal: 10
-  },
-  chipsIcon: {
-    marginRight: 5,
-  },
-  chipsItem: {
-    flexDirection: "row",
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: 8,
-    paddingHorizontal: 20,
-    marginHorizontal: 10,
-    height: 35,
-    shadowColor: '#ccc',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.5,
-    shadowRadius: 5,
-    elevation: 10,
-  },
-  scrollView: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingVertical: 10,
-  },
-  endPadding: {
-    paddingRight: width - CARD_WIDTH,
-  },
-  card: {
-    elevation: 1,
-    backgroundColor: "#FFF",
-    marginHorizontal: 10,
-    shadowColor: "#000",
-    shadowRadius: 5,
-    shadowOpacity: 0.3,
-    height: CARD_HEIGHT,
-    width: CARD_WIDTH,
-    overflow: "hidden",
-    marginBottom: 92,
-    flexDirection: "row",
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    zIndex: 99999
-  },
-  cardImage: {
-    width: 92,
-    height: 92,
-    alignSelf: "center",
-    borderRadius: 15
-  },
-  textContent: {
-    flex: 2,
-    padding: 10,
-  },
-  cardtitle: {
-    fontSize: 16,
-    fontFamily: "bold",
-    marginBottom: 7,
-    color: COLORS.black
-  },
-  cardDescription: {
-    fontSize: 12,
-    color: "#444",
-    marginTop: 12
-  },
-  markerWrap: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: 50,
-    height: 50,
-  },
-  marker: {
-    width: 30,
-    height: 30,
-  },
-  button: {
-    alignItems: 'center',
-    marginTop: 5
-  },
-  signIn: {
-    width: '100%',
-    padding: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 3
-  },
-  textSign: {
-    fontSize: 14,
-    fontWeight: 'bold'
-  },
-  categoryIcon: {
-    height: 18,
-    width: 18,
-    tintColor: COLORS.black,
-    marginRight: 8
-  },
-  typeContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 6
-  },
-  type: {
-    fontSize: 12,
-    fontFamily: "bold",
-    color: COLORS.primary,
-    marginLeft: 12
-  },
-  price: {
-    fontSize: 14,
-    fontFamily: "bold",
-    color: COLORS.red,
-    marginTop: 6
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontFamily: "bold",
-    color: COLORS.black,
-    textAlign: "center",
-    marginVertical: 12
-  },
-  modalSubtitle: {
-    fontSize: 16,
-    fontFamily: "regular",
-    color: COLORS.black,
-    textAlign: "center",
-    marginVertical: 12
-  },
-  modalContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(0,0,0,0.56)"
-  },
-  modalSubContainer: {
-    height: 520,
-    width: SIZES.width * 0.9,
-    backgroundColor: COLORS.white,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 16
-  },
-  modalIllustration: {
-    height: 180,
-    width: 180,
-    marginVertical: 22
-  },
-  successBtn: {
-    width: "100%",
-    marginTop: 12,
-    borderRadius: 32
-  },
-  receiptBtn: {
-    width: "100%",
-    marginTop: 12,
-    borderRadius: 32,
-    backgroundColor: COLORS.tansparentPrimary,
-    borderColor: COLORS.tansparentPrimary
-  },
-  editPencilIcon: {
-    width: 42,
-    height: 42,
-    tintColor: COLORS.black,
-    position: "absolute",
-    top: 76,
-    left: 58,
-  },
-  backgroundIllustration: {
-    height: 150,
-    width: 150,
-    marginVertical: 22,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-});
-
-export default Home
+export default BookingForm;
