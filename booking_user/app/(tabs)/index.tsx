@@ -5,18 +5,20 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-  Modal,
   Alert,
+  Modal as RNModal,
 } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { SIZES, FONTS, COLORS } from '../../constants/theme';
 import { OneWayForm, RoundTripForm, LocalForm, AirportForm } from '../../components/BookingForms';
 import { useTheme } from '@/theme/ThemeProvider';
 import Button from '../../components/Button';
 import Input from '@/components/Input';
 import { useRouter } from 'expo-router';
+import CustomModal from '../../components/Modal';
 
 type ThemeColors = {
   primary: string;
@@ -88,15 +90,31 @@ const BookingForm = () => {
   );
 
   const renderWelcomeModal = () => (
-    <Modal animationType="slide" transparent={true} visible={showWelcomeModal} onRequestClose={() => {}}>
+    <RNModal
+      animationType="slide"
+      transparent={true}
+      visible={showWelcomeModal}
+      onRequestClose={() => {}}
+    >
       <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Welcome to Our App! 👋</Text>
+        <View style={[styles.modalContent]}>
+          <TouchableOpacity style={styles.closeButton} onPress={() => setShowWelcomeModal(false)}>
+            <Text style={styles.closeButtonText}>×</Text>
+          </TouchableOpacity>
+          
+          <MaterialIcons 
+            name="account-circle" 
+            size={48} 
+            color={colors.primary} 
+            style={styles.icon} 
+          />
+          
+          <Text style={[styles.modalTitle, styles.titleWithIcon]}>Welcome to Our App! 👋</Text>
           <Text style={styles.modalSubtitle}>
             We're excited to have you on board. Please tell us your name to get started.
           </Text>
-
-          <View style={styles.inputContainer}>
+          
+          <View style={styles.contentContainer}>
             <Input
               id="userName"
               placeholder="Enter your name"
@@ -107,47 +125,61 @@ const BookingForm = () => {
               style={styles.input}
             />
           </View>
-
+          
           <Button 
-            title="Continue" 
-            onPress={handleWelcomeSubmit} 
-            style={styles.continueButton} 
+            title="Continue"
+            onPress={handleWelcomeSubmit}
+            style={styles.submitButton}
+            filled
             textColor="white"
           />
         </View>
       </View>
-    </Modal>
+    </RNModal>
   );
 
   return (
-    <SafeAreaView style={[styles.container]}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       {renderWelcomeModal()}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Book a Ride</Text>
-      </View>
+      <View style={{ flex: 1 }}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Book a Ride</Text>
+        </View>
 
-      <View style={styles.tabsContainer}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabsScrollView}>
-          <TabButton label="One Way" isActive={activeTab === 'oneWay'} onPress={() => setActiveTab('oneWay')} />
-          <TabButton label="Round Trip" isActive={activeTab === 'roundTrip'} onPress={() => setActiveTab('roundTrip')} />
-          <TabButton label="Local" isActive={activeTab === 'local'} onPress={() => setActiveTab('local')} />
-          <TabButton label="Airport" isActive={activeTab === 'airport'} onPress={() => setActiveTab('airport')} />
-        </ScrollView>
-      </View>
+        <View style={styles.tabsContainer}>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false} 
+            contentContainerStyle={styles.tabsScrollView}
+          >
+            <TabButton label="One Way" isActive={activeTab === 'oneWay'} onPress={() => setActiveTab('oneWay')} />
+            <TabButton label="Round Trip" isActive={activeTab === 'roundTrip'} onPress={() => setActiveTab('roundTrip')} />
+            <TabButton label="Local" isActive={activeTab === 'local'} onPress={() => setActiveTab('local')} />
+            <TabButton label="Airport" isActive={activeTab === 'airport'} onPress={() => setActiveTab('airport')} />
+          </ScrollView>
+        </View>
 
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-      >
-        <ScrollView style={styles.contentContainer}>{renderTabContent()}</ScrollView>
-      </KeyboardAvoidingView>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
+          <ScrollView 
+            style={styles.contentContainer}
+            contentContainerStyle={{ paddingBottom: 100 }}
+            keyboardShouldPersistTaps="handled"
+          >
+            {renderTabContent()}
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 };
 
 const createStyles = (colors: ThemeColors) =>
   StyleSheet.create({
+    // Modal styles
     modalOverlay: {
       flex: 1,
       justifyContent: 'center',
@@ -158,7 +190,7 @@ const createStyles = (colors: ThemeColors) =>
     modalContent: {
       width: '100%',
       padding: SIZES.padding * 2.5,
-      borderRadius: SIZES.radius * 1.2,
+      borderRadius: SIZES.radius,
       alignItems: 'center',
       backgroundColor: COLORS.white,
       shadowColor: '#000',
@@ -166,6 +198,23 @@ const createStyles = (colors: ThemeColors) =>
       shadowOpacity: 0.15,
       shadowRadius: 12,
       elevation: 8,
+    },
+    closeButton: {
+      position: 'absolute',
+      top: SIZES.padding,
+      right: SIZES.padding,
+      padding: SIZES.padding,
+    },
+    closeButtonText: {
+      fontSize: 24,
+      color: COLORS.grayscale700,
+      lineHeight: 24,
+    },
+    icon: {
+      marginBottom: SIZES.padding2,
+    },
+    titleWithIcon: {
+      marginTop: SIZES.padding2,
     },
     modalTitle: {
       ...FONTS.h2,
@@ -180,6 +229,11 @@ const createStyles = (colors: ThemeColors) =>
       marginBottom: SIZES.padding * 1.5,
       lineHeight: 22,
     },
+    submitButton: {
+      width: '100%',
+      marginTop: SIZES.padding2,
+    },
+
     inputContainer: {
       width: '100%',
       marginBottom: SIZES.padding * 1.5,
@@ -203,7 +257,8 @@ const createStyles = (colors: ThemeColors) =>
     },
     container: {
       flex: 1,
-      backgroundColor: colors.background,
+      backgroundColor: colors.background || COLORS.white,
+      paddingBottom: 80, // Add bottom padding to account for tab bar
     },
     header: {
       padding: SIZES.padding3,
