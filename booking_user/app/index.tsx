@@ -9,7 +9,6 @@ import { COLORS, images } from "../constants";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 
-
 const Onboarding1 = () => {
   const router = useRouter();
   useEffect(() => {
@@ -18,7 +17,8 @@ const Onboarding1 = () => {
     }, 1500);
 
     return () => clearTimeout(timeout);
-  }, []); // Run only once after component mounts
+  }, []);
+  // Run only once after component mounts
 
   return (
     <ImageBackground source={images.splashOnboarding} style={styles.area}>
@@ -28,9 +28,9 @@ const Onboarding1 = () => {
         style={styles.background}
       >
         <Text style={styles.greetingText}>Welcome to 👋</Text>
-        <Text style={styles.logoName}>Taxio</Text>
+        <Text style={styles.logoName}>Rahiseva</Text>
         <Text style={styles.subtitle}>
-          The best taxi booking app of the century to make your day great!
+          The best cab booking app of the century to make your day great!
         </Text>
       </LinearGradient>
     </ImageBackground>
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: COLORS.white,
     fontFamily: "bold",
-    marginVertical: 12,
+    // marginVertical: 12,
   },
   logoName: {
     fontSize: 76,
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 16,
     color: COLORS.white,
-    marginVertical: 12,
+    marginVertical: 16,
     fontFamily: "semiBold",
   },
 });
