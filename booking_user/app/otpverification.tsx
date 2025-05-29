@@ -101,7 +101,7 @@ const OTPVerification = () => {
           title="Verify"
           filled
           style={styles.button}
-          onPress={() => router.push("/(tabs)")}
+          onPress={() => router.push({pathname: "/(tabs)", params:params})}
         />
       </View>
     </SafeAreaView>

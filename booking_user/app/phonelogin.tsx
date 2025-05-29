@@ -104,7 +104,7 @@ const Login = () => {
   const handleLogin = () => {
     Keyboard.dismiss();
     if (!isMobileValid()) return;
-    router.push("/otpverification");
+    router.replace({pathname:"/otpverification", params:{userType: "user", isSignup: "true", phone: formState.inputValues.mobile, email: null}});
   };
 
   return (

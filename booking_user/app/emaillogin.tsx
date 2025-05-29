@@ -61,8 +61,7 @@ const EmailLogin = () => {
   const handleLogin = () => {
     Keyboard.dismiss();
     if (!formState.formIsValid) return;
-    // Implement your login logic here
-    router.push('/(tabs)'); // or navigate to the home screen
+    router.replace({pathname:"/(tabs)", params:{userType: "user", isSignup: "true", phone: null, email: formState.inputValues.email}}); // or navigate to the home screen
   };
 
   return (
