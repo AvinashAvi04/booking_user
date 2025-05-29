@@ -107,7 +107,7 @@ const Login = () => {
 
     if (existingUser) {
       router.push({
-        pathname: "/enterpassword",
+        pathname: "/otpverification",
         params: {
           mobile: formState.inputValues.mobile,
           existingUser: "true",
@@ -115,7 +115,7 @@ const Login = () => {
       });
     } else {
       router.push({
-        pathname: "/enterpassword",
+        pathname: "/otpverification",
         params: {
           mobile: formState.inputValues.mobile,
           existingUser: "false",
@@ -142,7 +142,10 @@ const Login = () => {
         ]}
       >
         {/* <Header title="" /> */}
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
           <View style={styles.logoContainer}>
             <Image
               source={images.logo}

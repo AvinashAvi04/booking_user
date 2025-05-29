@@ -8,7 +8,7 @@ import Button from "../components/Button";
 import { useTheme } from "../theme/ThemeProvider";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-const OTPVerification = () => {
+const OTPVerificationKyc = () => {
   const params = useLocalSearchParams();
   const router = useRouter();
   const [time, setTime] = useState(50);
@@ -87,7 +87,7 @@ const OTPVerification = () => {
           title="Verify"
           filled
           style={styles.button}
-          onPress={() => router.push("/(tabs)")}
+          onPress={() => router.push("/upload_driving_licence")}
         />
       </View>
     </SafeAreaView>
@@ -143,4 +143,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OTPVerification;
+export default OTPVerificationKyc;

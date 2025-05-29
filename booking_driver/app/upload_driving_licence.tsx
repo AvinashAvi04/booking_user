@@ -63,7 +63,7 @@ const initialState = {
 };
 
 // edit profile screen
-const EditProfile = () => {
+const UploadDL = () => {
   const [image, setImage] = useState<any>(null);
   const [error, setError] = useState();
   const [formState, dispatchFormState] = useReducer(reducer, initialState);
@@ -243,106 +243,49 @@ const EditProfile = () => {
           { backgroundColor: dark ? COLORS.dark1 : COLORS.white },
         ]}
       >
-        <Header title="Complete Your KYC" />
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={{ alignItems: "center", marginVertical: 12 }}>
-            {/* <View style={styles.avatarContainer}>
-              <Image
-                source={image === null ? images.user1 : image}
-                contentFit="cover"
-                style={styles.avatar}
-              />
-              <TouchableOpacity onPress={pickImage} style={styles.pickImage}>
-                <MaterialCommunityIcons
-                  name="pencil-outline"
-                  size={24}
-                  color={COLORS.white}
-                />
-              </TouchableOpacity>
-            </View> */}
-          </View>
-          <Text>Enter your Aadhar Card Number</Text>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginBottom: 16,
-            }}
-          >
-            <View style={{ flex: 1 }}>
-              <Input2
-                id="aadhar1"
-                value={aadhar1}
-                onInputChanged={(_, val) => {
-                  const cleanedValue = val.replace(/[^0-9]/g, "");
-                  setAadhar1(cleanedValue);
-                  if (cleanedValue.length === 4) {
-                    aadhar2Ref.current?.focus();
-                  }
-                }}
-                maxLength={4}
-                keyboardType="numeric"
-                placeholder="0000"
-                style={{ flex: 1, marginRight: 4 }}
-                placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
-                ref={null}
-              />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Input2
-                id="aadhar2"
-                value={aadhar2}
-                onInputChanged={(_, val) => {
-                  const cleanedValue = val.replace(/[^0-9]/g, "");
-                  setAadhar2(cleanedValue);
-                  if (cleanedValue.length === 4) {
-                    aadhar3Ref.current?.focus();
-                  }
-                }}
-                maxLength={4}
-                keyboardType="numeric"
-                placeholder="0000"
-                style={{ flex: 1, marginHorizontal: 2 }}
-                placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
-                ref={aadhar2Ref}
-              />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Input2
-                id="aadhar3"
-                value={aadhar3}
-                onInputChanged={(_, val) => {
-                  setAadhar3(val.replace(/[^0-9]/g, ""));
-                }}
-                maxLength={4}
-                keyboardType="numeric"
-                placeholder="0000"
-                style={{ flex: 1, marginLeft: 4 }}
-                placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
-                ref={aadhar3Ref}
-              />
-            </View>
-          </View>
-          {/* <View>
+        {/* <Header title="You have completed your KYC" /> */}
+        <View
+          style={{
+            backgroundColor: COLORS.success,
+            padding: 16,
+            borderRadius: 8,
+          }}
+        >
+          <Text style={{ textAlign: "center" }}>
+            You have completed your KYC
+          </Text>
+        </View>
+         <Input
+            id="aadhar1"
+            placeholder="Password"
+            secureTextEntry
+            value={''}
+            onInputChanged={(id, text) => setPassword(text)}
+            errorText={errors.password}
+            placeholderTextColor={dark ? COLORS.gray : COLORS.gray2}
+            icon={icons.padlock}
+            autoCapitalize="none"
+          />
+        {/* <ScrollView showsVerticalScrollIndicator={false}>
+          <View>
             <AadharImageUploaderProps
               pickFrontImage={pickFrontImage}
               pickBackImage={pickBackImage}
               frontImage={frontImage}
               backImage={backImage}
             />
-          </View> */}
-        </ScrollView>
+          </View>
+        </ScrollView> */}
       </View>
       {RenderAreasCodesModal()}
       <View style={styles.bottomContainer}>
         <Button
-          title="Save"
+          title="Upload"
           filled
           style={styles.continueButton}
           onPress={() => {
-            console.log("Update button pressed");
             try {
-              router.replace("/otpverification_kyc");
+              router.replace("/add_vehicle");
             } catch (error) {
               console.error("Navigation error:", error);
             }
@@ -367,13 +310,13 @@ const AadharImageUploaderProps = ({
   return (
     <View style={{ marginTop: 20 }}>
       <Text style={{ ...FONTS.body3, marginBottom: 8 }}>
-        Upload Aadhar Card
+        Please Upload Required Document{" "}
       </Text>
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+      <View>
         <TouchableOpacity onPress={pickFrontImage}>
           <View
             style={{
-              width: SIZES.width / 2.3,
+              flex: 1,
               height: 120,
               borderRadius: 10,
               borderWidth: 1,
@@ -392,34 +335,7 @@ const AadharImageUploaderProps = ({
               />
             ) : (
               <Text style={{ ...FONTS.body4, color: COLORS.dark2 }}>
-                Front Side
-              </Text>
-            )}
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={pickBackImage}>
-          <View
-            style={{
-              width: SIZES.width / 2.3,
-              height: 120,
-              borderRadius: 10,
-              borderWidth: 1,
-              borderColor: COLORS.primary,
-              justifyContent: "center",
-              alignItems: "center",
-              overflow: "hidden",
-              backgroundColor: COLORS.greyscale300,
-            }}
-          >
-            {backImage ? (
-              <Image
-                source={{ uri: backImage.uri }}
-                contentFit="cover"
-                style={{ width: "100%", height: "100%" }}
-              />
-            ) : (
-              <Text style={{ ...FONTS.body4, color: COLORS.dark2 }}>
-                Back Side
+                Driving License
               </Text>
             )}
           </View>
@@ -546,4 +462,4 @@ const pickerSelectStyles = StyleSheet.create({
   },
 });
 
-export default EditProfile;
+export default UploadDL;
