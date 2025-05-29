@@ -76,6 +76,7 @@ export default function RootLayout() {
         <Stack.Screen name="transactionhistory" />
         <Stack.Screen name="welcome" />
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="inbox" />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
