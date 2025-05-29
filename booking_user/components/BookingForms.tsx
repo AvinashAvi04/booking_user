@@ -59,7 +59,7 @@ export const OneWayForm = () => {
             ))}
           </Picker>
         </View>
-        <Button title="Book Now" filled style={{ marginTop: 24 }} onPress={() => {}} />
+        <Button title="Search" filled style={{ marginTop: 24 }} onPress={() => {}} />
         <DatePickerModal
           open={showDate}
           startDate={new Date().toISOString().split('T')[0]}

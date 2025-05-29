@@ -7,18 +7,15 @@ import {
 } from "react-native";
 import { COLORS, images } from "../constants";
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation } from "expo-router";
+import { useRouter } from "expo-router";
 
-type Nav = {
-  navigate: (value: string) => void;
-};
 
 const Onboarding1 = () => {
-  const { navigate } = useNavigation<Nav>();
+  const router = useRouter();
   useEffect(() => {
     const timeout = setTimeout(() => {
-      navigate("login");
-    }, 2000);
+      router.replace("/phonelogin");
+    }, 1500);
 
     return () => clearTimeout(timeout);
   }, []); // Run only once after component mounts
@@ -35,12 +32,6 @@ const Onboarding1 = () => {
         <Text style={styles.subtitle}>
           The best taxi booking app of the century to make your day great!
         </Text>
-        <TouchableOpacity
-          style={{ position: "absolute", bottom: 20, right: 20 }}
-          onPress={() => navigate("phonelogin")}
-        >
-          <Text style={{ color: COLORS.white, fontSize: 16 }}>Go To Login</Text>
-        </TouchableOpacity>
       </LinearGradient>
     </ImageBackground>
   );

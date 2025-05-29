@@ -1,7 +1,7 @@
 import React, { useState, FC } from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import DatePicker from 'react-native-modern-datepicker';
-import { COLORS } from '../constants';
+import { COLORS, FONTS } from '../constants';
 
 const error = console.error;
 console.error = (...args) => {
@@ -48,17 +48,29 @@ const DatePickerModal: FC<DatePickerModalProps> = ({
                         onDateChange={handleDateChange}
                         onSelectedChange={(date) => setSelectedStartDate(date)}
                         options={{
-                            backgroundColor: COLORS.primary,
-                            textHeaderColor: COLORS.white,
-                            textDefaultColor: '#FFFFFF',
-                            selectedTextColor: COLORS.primary,
-                            mainColor: COLORS.white,
-                            textSecondaryColor: '#FFFFFF',
-                            borderColor: COLORS.primary,
+                            backgroundColor: COLORS.grayscale100,
+                            textHeaderColor: COLORS.black,
+                            textDefaultColor: COLORS.black2,
+                            selectedTextColor: COLORS.white,
+                            mainColor: COLORS.primary,
+                            textSecondaryColor: COLORS.gray,
+                            borderColor: COLORS.grayscale200,
+                            defaultFont: FONTS.body3.fontFamily,
+                            headerFont: FONTS.h4.fontFamily,
+                            textFontSize: 14,
                         }}
                     />
-                    <TouchableOpacity onPress={handleOnPressStartDate}>
-                        <Text style={{ color: 'white' }}>Close</Text>
+                    <TouchableOpacity 
+                        onPress={handleOnPressStartDate}
+                        style={{
+                            marginTop: 10,
+                            padding: 10,
+                            backgroundColor: COLORS.primary,
+                            borderRadius: 8,
+                            paddingHorizontal: 20
+                        }}
+                    >
+                        <Text style={{ color: COLORS.white, fontFamily: FONTS.h4.fontFamily }}>Close</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -74,11 +86,11 @@ const styles = StyleSheet.create({
     },
     modalView: {
         margin: 20,
-        backgroundColor: COLORS.primary,
+        backgroundColor: COLORS.white,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 20,
-        padding: 35,
+        padding: 20,
         width: '90%',
         shadowColor: '#000',
         shadowOffset: {
