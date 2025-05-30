@@ -93,6 +93,7 @@ const Bookings = () => {
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
+        
         {renderHeader()}
         <TabView
           navigationState={{ index, routes }}

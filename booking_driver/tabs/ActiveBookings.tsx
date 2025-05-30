@@ -161,7 +161,7 @@ const ActiveBookings = () => {
                     </View>
 
                     {/* Location map for route */}
-                    <View style={[styles.locationMapContainer, {
+                    {/* <View style={[styles.locationMapContainer, {
                       backgroundColor: dark ? COLORS.dark1 : COLORS.white,
                     }]}>
                       <MapView
@@ -203,7 +203,7 @@ const ActiveBookings = () => {
                           </Callout>
                         </Marker>
                       </MapView>
-                    </View>
+                    </View> */}
 
                     <TouchableOpacity
                       onPress={() => navigation.navigate("cancelbooking")}
@@ -438,7 +438,7 @@ const styles = StyleSheet.create({
     marginTop: 6
   },
   cancelBtnText: {
-    color: COLORS.greyscale900,
+    color: 'red',
     fontFamily: "semiBold",
     fontSize: 16
   },

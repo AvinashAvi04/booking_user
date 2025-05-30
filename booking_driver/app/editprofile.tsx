@@ -45,13 +45,12 @@ interface RenderItemProps {
   item: Item;
 }
 
-const isTestMode = true;
 
 const initialState = {
   inputValues: {
-    fullName: isTestMode ? "John Doe" : "",
-    email: isTestMode ? "example@gmail.com" : "",
-    nickname: isTestMode ? "" : "",
+    fullName: "John Doe",
+    email: "example@gmail.com",
+    nickname:  "",
     phoneNumber: "",
   },
   inputValidities: {
@@ -65,10 +64,18 @@ const initialState = {
 
 // edit profile screen
 const EditProfile = () => {
-  const { isSignup } = useLocalSearchParams();
-  const isFirstTimeUser = isSignup === "true";
+  const params = useLocalSearchParams();
+  const isFirstTimeUser = params.isSignup === "true";
   const [showWelcomeModal, setShowWelcomeModal] = useState(isFirstTimeUser);
-  const [userName, setUserName] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState(
+    Array.isArray(params.email) ? params.email[0] || "" : params.email || ""
+  );
+  const [phone, setPhone] = useState(
+    Array.isArray(params.phone) ? params.phone[0] || "" : params.phone || ""
+  );
+  const [emailError, setEmailError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   const [image, setImage] = useState<any>(null);
   const [error, setError] = useState();
   const [formState, dispatchFormState] = useReducer(reducer, initialState);
@@ -80,12 +87,48 @@ const EditProfile = () => {
   const { dark, colors } = useTheme();
   const router = useRouter();
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone: string) => {
+    const phoneRegex = /^[0-9]{10}$/;
+    return phoneRegex.test(phone);
+  };
+
   const handleWelcomeSubmit = () => {
-    if (!userName.trim()) {
-      Alert.alert("Name Required", "Please enter your name to continue");
+    if (!name.trim()) {
+      setValidationError("Please enter your name");
       return;
     }
+
+    const hasEmail = Array.isArray(params.email) ? params.email.length > 0 : Boolean(params.email);
+    const hasPhone = Array.isArray(params.phone) ? params.phone.length > 0 : Boolean(params.phone);
+
+    if (!hasEmail && !email) {
+      setValidationError("Please enter your email address");
+      return;
+    }
+
+    if (!hasPhone && !phone) {
+      setValidationError("Please enter your phone number");
+      return;
+    }
+
+    if (email && !validateEmail(email)) {
+      setValidationError("Please enter a valid email address");
+      return;
+    }
+
+    if (phone && !validatePhone(phone)) {
+      setValidationError("Please enter a valid 10-digit phone number");
+      return;
+    }
+
+    setValidationError("");
     setShowWelcomeModal(false);
+    // Here you would typically save the data to your backend
   };
 
   const renderWelcomeModal = () => (
@@ -97,14 +140,6 @@ const EditProfile = () => {
     >
       <View style={styles.modalOverlay}>
         <View style={[styles.modalContent, { backgroundColor: colors.background }]}>
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => setShowWelcomeModal(false)}
-          >
-            <Text style={[styles.closeButtonText, { color: colors.text }]}>
-              ×
-            </Text>
-          </TouchableOpacity>
 
           <MaterialIcons
             name="account-circle"
@@ -119,19 +154,53 @@ const EditProfile = () => {
 
           <View style={styles.contentContainer}>
             <Text style={[styles.modalSubtitle, { color: colors.text }]}>
-              We're excited to have you on board. Please tell us your name to
-              get started.
+              {(!params.email || (Array.isArray(params.email) && params.email.length === 0)) || 
+               (!params.phone || (Array.isArray(params.phone) && params.phone.length === 0))
+                ? "Please complete your profile" 
+                : "We're excited to have you on board. Please tell us your name to get started."
+              }
             </Text>
+            
             <Input
-              id="userName"
-              placeholder="Enter your name"
-              placeholderTextColor={colors.text}
-              value={userName}
-              onInputChanged={(id, text) => setUserName(text)}
-              autoFocus
+              id="fullName"
+              placeholder="Enter your full name"
+              value={name}
+              onInputChanged={(id, text) => setName(text)}
               style={styles.input}
               icon={icons.user}
+              autoCapitalize="words"
             />
+
+            {(!params.email || (Array.isArray(params.email) && params.email.length === 0)) && (
+              <Input
+                id="email"
+                placeholder="Enter your email address"
+                value={email}
+                onInputChanged={(id, text) => setEmail(text)}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                style={styles.input}
+                icon={icons.email}
+                errorText={emailError ? [emailError] : undefined}
+              />
+            )}
+
+            {(!params.phone || (Array.isArray(params.phone) && params.phone.length === 0)) && (
+              <Input
+                id="phone"
+                placeholder="Enter your phone number"
+                value={phone}
+                onInputChanged={(id, text) => setPhone(text)}
+                keyboardType="phone-pad"
+                maxLength={10}
+                style={styles.input}
+                icon={icons.call}
+              />
+            )}
+
+            {validationError ? (
+              <Text style={styles.errorText}>{validationError}</Text>
+            ) : null}
           </View>
 
           <Button
@@ -296,10 +365,24 @@ const EditProfile = () => {
   const [aadhar1, setAadhar1] = useState("");
   const [aadhar2, setAadhar2] = useState("");
   const [aadhar3, setAadhar3] = useState("");
+  const [validationError, setValidationError] = useState("");
 
   // Refs for TextInput focus
   const aadhar2Ref = useRef<TextInput>(null);
   const aadhar3Ref = useRef<TextInput>(null);
+
+  const validateAadhar = () => {
+    if (!aadhar1 || !aadhar2 || !aadhar3) {
+      setValidationError("Please enter complete Aadhar number");
+      return false;
+    }
+    if (aadhar1.length !== 4 || aadhar2.length !== 4 || aadhar3.length !== 4) {
+      setValidationError("Each part must be 4 digits");
+      return false;
+    }
+    setValidationError("");
+    return true;
+  };
 
   return (
     <SafeAreaView
@@ -412,14 +495,15 @@ const EditProfile = () => {
           filled
           style={styles.continueButton}
           onPress={() => {
-            console.log("Update button pressed");
-            try {
+            if (validateAadhar()) {
+              console.log("Aadhar number is valid, proceeding to OTP verification");
               router.replace("/otpverification_kyc");
-            } catch (error) {
-              console.error("Navigation error:", error);
             }
           }}
         />
+        {validationError ? (
+          <Text style={styles.errorText}>{validationError}</Text>
+        ) : null}
       </View>
     </SafeAreaView>
   );
@@ -600,6 +684,14 @@ const styles = StyleSheet.create({
     height: 40,
     fontSize: 14,
     color: "#111",
+  },
+  errorText: {
+    color: COLORS.error || 'red',
+    fontSize: 12,
+    marginTop: 4,
+    marginLeft: 4,
+    textAlign: 'center',
+    width: '100%',
   },
   inputBtn: {
     borderWidth: 1,

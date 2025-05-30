@@ -4,6 +4,7 @@ import {
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
+  View,
 } from "react-native";
 import { COLORS, images } from "../constants";
 import { LinearGradient } from "expo-linear-gradient";
@@ -13,12 +14,11 @@ const Onboarding1 = () => {
   const router = useRouter();
   useEffect(() => {
     const timeout = setTimeout(() => {
-      router.replace("/phonelogin");
+      router.replace("/(tabs)");
     }, 1500);
 
     return () => clearTimeout(timeout);
   }, []);
-  // Run only once after component mounts
 
   return (
     <ImageBackground source={images.splashOnboarding} style={styles.area}>
@@ -28,7 +28,10 @@ const Onboarding1 = () => {
         style={styles.background}
       >
         <Text style={styles.greetingText}>Welcome to 👋</Text>
-        <Text style={styles.logoName}>Rahiseva</Text>
+        <View style={styles.logoContainer}>
+          <Text style={styles.logoName}>Rahiseva</Text>
+          <Text style={styles.logoText}>Driver</Text>
+        </View>
         <Text style={styles.subtitle}>
           The best cab booking app of the century to make your day great!
         </Text>
@@ -52,17 +55,30 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: COLORS.white,
     fontFamily: "bold",
-    // marginVertical: 12,
+    marginVertical: 12,
+  },
+  logoContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    alignSelf: 'flex-start',
   },
   logoName: {
     fontSize: 76,
     color: COLORS.primary,
     fontFamily: "extraBold",
+    textAlign: 'left',
+  },
+  logoText: {
+    fontSize: 18,
+    color: COLORS.primary,
+    fontFamily: 'bold',
+    textAlign: 'left',
+    marginTop: -10,
   },
   subtitle: {
     fontSize: 16,
     color: COLORS.white,
-    marginVertical: 16,
+    marginVertical: 14,
     fontFamily: "semiBold",
   },
 });
