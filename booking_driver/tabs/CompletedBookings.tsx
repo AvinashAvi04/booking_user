@@ -106,7 +106,7 @@ const CompletedBookings = () => {
                                         }]} />
 
                                         {/* Location information for route */}
-                                        <View>
+                                        {/* <View>
                                             <View style={styles.locationItemContainer}>
                                                 <View style={styles.locationIcon1}>
                                                     <View style={styles.locationIcon2}>
@@ -153,7 +153,7 @@ const CompletedBookings = () => {
                                                     </Text>
                                                 </View>
                                             </View>
-                                        </View>
+                                        </View> */}
                                     </>
                                 )
                             }

@@ -4,24 +4,21 @@ import {
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
+  View,
 } from "react-native";
 import { COLORS, images } from "../constants";
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation } from "expo-router";
-
-type Nav = {
-  navigate: (value: string) => void;
-};
+import { useRouter } from "expo-router";
 
 const Onboarding1 = () => {
-  const { navigate } = useNavigation<Nav>();
+  const router = useRouter();
   useEffect(() => {
     const timeout = setTimeout(() => {
-      navigate("login");
-    }, 2000);
+      router.replace("/(tabs)");
+    }, 1500);
 
     return () => clearTimeout(timeout);
-  }, []); // Run only once after component mounts
+  }, []);
 
   return (
     <ImageBackground source={images.splashOnboarding} style={styles.area}>
@@ -31,16 +28,13 @@ const Onboarding1 = () => {
         style={styles.background}
       >
         <Text style={styles.greetingText}>Welcome to 👋</Text>
-        <Text style={styles.logoName}>Taxio</Text>
+        <View style={styles.logoContainer}>
+          <Text style={styles.logoName}>Rahiseva</Text>
+          <Text style={styles.logoText}>Driver</Text>
+        </View>
         <Text style={styles.subtitle}>
-          The best taxi booking app of the century to make your day great!
+          The best cab booking app of the century to make your day great!
         </Text>
-        <TouchableOpacity
-          style={{ position: "absolute", bottom: 20, right: 20 }}
-          onPress={() => navigate("login")}
-        >
-          <Text style={{ color: COLORS.white, fontSize: 16 }}>Go To Login</Text>
-        </TouchableOpacity>
       </LinearGradient>
     </ImageBackground>
   );
@@ -63,15 +57,28 @@ const styles = StyleSheet.create({
     fontFamily: "bold",
     marginVertical: 12,
   },
+  logoContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    alignSelf: 'flex-start',
+  },
   logoName: {
     fontSize: 76,
     color: COLORS.primary,
     fontFamily: "extraBold",
+    textAlign: 'left',
+  },
+  logoText: {
+    fontSize: 18,
+    color: COLORS.primary,
+    fontFamily: 'bold',
+    textAlign: 'left',
+    marginTop: -10,
   },
   subtitle: {
     fontSize: 16,
     color: COLORS.white,
-    marginVertical: 12,
+    marginVertical: 14,
     fontFamily: "semiBold",
   },
 });

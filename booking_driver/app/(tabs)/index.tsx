@@ -1,577 +1,470 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, TextInput, View, ScrollView, Animated, Image, TouchableOpacity, Dimensions, Platform, Modal, TouchableWithoutFeedback } from "react-native";
-import MapView, { Marker } from "react-native-maps";
-import { Ionicons } from "@expo/vector-icons";
-import { mapDarkStyle, mapStandardStyle, markers } from '@/data/mapData';
-import { COLORS, icons, illustrations, SIZES } from '@/constants';
-import Button from '@/components/Button';
-import StarRating2 from '@/components/StarRating2';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from 'react';
+import { COLORS, icons } from '@/constants';
+import { activeBookings } from '@/data';
 import { useTheme } from '@/theme/ThemeProvider';
-import { useFocusEffect, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 
-const { width } = Dimensions.get("window");
-const CARD_HEIGHT = 112;
-const CARD_WIDTH = width * 0.85;
-const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
-
-const isExistingUser = false;
-
-const Home = () => {
-  const [isFavourite, setIsFavourite] = useState(false);
-  const [modalVisible, setModalVisible] = useState(true);
-  const [directionModalVisible, setDirectionModalVisible] = useState(false);
+const ActiveBookings = () => {
   const { dark } = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
-  useFocusEffect(
-    React.useCallback(() => {
-      if (!isExistingUser) {
-        router.replace('/editprofile');
+  const redirectToChat = (bookingId: string, driverName: string) => {
+    router.push({
+      pathname: "/chat",
+      params: {
+        bookingId,
+        driverName
       }
-    }, [isExistingUser])
-  );
-
-  const initialMapState = {
-    markers,
-    region: {
-      latitude: 22.62938671242907,
-      longitude: 88.4354486029795,
-      latitudeDelta: 0.04864195044303443,
-      longitudeDelta: 0.040142817690068,
-    },
-  };
-
-  const [state, setState] = React.useState(initialMapState);
-
-  let mapIndex = 0;
-  let mapAnimation = new Animated.Value(0);
-
-  const _map = useRef<any>(null);
-  const _scrollView = useRef<any>(null);
-
-  useEffect(() => {
-    mapAnimation.addListener(({ value }) => {
-      let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
-      if (index >= state.markers.length) {
-        index = state.markers.length - 1;
-      }
-      if (index <= 0) {
-        index = 0;
-      }
-
-      const regionTimeout = setTimeout(() => {
-        if (mapIndex !== index) {
-          mapIndex = index;
-          const { coordinate } = state.markers[index];
-          _map.current.animateToRegion(
-            {
-              ...coordinate,
-              latitudeDelta: state.region.latitudeDelta,
-              longitudeDelta: state.region.longitudeDelta,
-            },
-            350
-          );
-        }
-      }, 10);
-
-      clearTimeout(regionTimeout);
     });
-
-  });
-
-  const interpolations = state.markers.map((marker, index) => {
-    const inputRange = [
-      (index - 1) * CARD_WIDTH,
-      index * CARD_WIDTH,
-      ((index + 1) * CARD_WIDTH),
-    ];
-
-    const scale = mapAnimation.interpolate({
-      inputRange,
-      outputRange: [1, 1.5, 1],
-      extrapolate: "clamp"
-    });
-
-    return { scale };
-  });
-
-  const onMarkerPress = (mapEventData: any) => {
-    const markerID = mapEventData._targetInst.return.key;
-
-    let x = (markerID * CARD_WIDTH) + (markerID * 20);
-    if (Platform.OS === 'ios') {
-      x = x - SPACING_FOR_CARD_INSET;
-    }
-
-    _scrollView.current.scrollTo({ x: x, y: 0, animated: true });
-  }
-
-  const handleInputFocus = () => {
-    // Redirect to another screen
-    router.push('/search');
   };
-
-  const renderDirectionModal = () => {
-    return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={directionModalVisible}>
-        <TouchableWithoutFeedback
-          onPress={() => setDirectionModalVisible(false)}>
-          <View style={styles.modalContainer}>
-            <View style={[styles.modalSubContainer,
-            {
-              height: 420,
-              width: SIZES.width * 0.8,
-              backgroundColor: dark ? COLORS.dark2 : COLORS.white,
-            }]}>
-              <View style={styles.backgroundIllustration}>
-                <Image
-                  source={illustrations.background}
-                  resizeMode='contain'
-                  style={styles.modalIllustration}
-                />
-                <Image
-                  source={icons.location2}
-                  resizeMode='contain'
-                  style={styles.editPencilIcon}
-                />
-              </View>
-              <Text style={[styles.modalTitle, {
-                color: dark ? COLORS.primary : COLORS.greyscale900,
-              }]}>You have arrived at your destination!</Text>
-              <Text style={[styles.modalSubtitle, {
-                color: dark ? COLORS.white : COLORS.black,
-              }]}>
-                See your on your next trip!
-              </Text>
-              <Button
-                title="Okay"
-                filled
-                onPress={() => {
-                  setDirectionModalVisible(false)
-                }}
-                style={styles.successBtn}
-              />
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-    )
-  }
-
-  // Render modal
-  const renderModal = () => {
-    return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}>
-        <TouchableWithoutFeedback
-          onPress={() => setModalVisible(false)}>
-          <View style={styles.modalContainer}>
-            <View style={[styles.modalSubContainer, {
-              backgroundColor: dark ? COLORS.dark2 : COLORS.white,
-            }]}>
-              <View style={styles.backgroundIllustration}>
-                <Image
-                  source={illustrations.background}
-                  resizeMode='contain'
-                  style={styles.modalIllustration}
-                />
-                <Image
-                  source={icons.location2}
-                  resizeMode='contain'
-                  style={styles.editPencilIcon}
-                />
-              </View>
-              <Text style={[styles.modalTitle, {
-                color: dark ? COLORS.primary : COLORS.greyscale900,
-              }]}>Enable Location</Text>
-              <Text style={[styles.modalSubtitle, {
-                color: dark ? COLORS.white : COLORS.black,
-              }]}>
-                We need location access to find the nearest taxi around you.
-              </Text>
-              <Button
-                title="Enable location"
-                filled
-                onPress={() => {
-                  setModalVisible(false)
-                }}
-                style={styles.successBtn}
-              />
-              <Button
-                title="Cancel"
-                onPress={() => {
-                  setModalVisible(false)
-                }}
-                textColor={dark ? COLORS.white : COLORS.black}
-                style={{
-                  width: "100%",
-                  marginTop: 12,
-                  borderRadius: 32,
-                  backgroundColor: dark ? COLORS.dark3 : COLORS.tansparentPrimary,
-                  borderColor: dark ? COLORS.dark3 : COLORS.tansparentPrimary
-                }}
-              />
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-    )
-  }
 
   return (
-    <View style={styles.container}>
-      <MapView
-        ref={_map}
-        initialRegion={state.region}
-        style={styles.container}
-        customMapStyle={dark ? mapDarkStyle : mapStandardStyle}>
-        {state.markers.map((marker, index) => {
-          const scaleStyle = {
-            transform: [
-              {
-                scale: interpolations[index].scale,
-              },
-            ],
-          };
+    <View style={[styles.container, {
+      backgroundColor: dark ? COLORS.dark1 : COLORS.tertiaryWhite
+    }]}>
+      <FlatList
+        data={activeBookings}
+        keyExtractor={item => item.id}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => {
           return (
-            <Marker key={index} coordinate={marker.coordinate} onPress={(e) => onMarkerPress(e)}>
-              <Animated.View style={[styles.markerWrap]}>
-                <Animated.Image
-                  source={icons.taxi}
-                  style={[styles.marker, scaleStyle]}
-                  resizeMode="cover"
+            <View style={[styles.cardContainer, {
+              backgroundColor: dark ? COLORS.dark2 : COLORS.white,
+            }]}>
+              {/* Driver infor */}
+              <View style={styles.topCardContainer}>
+                <View style={styles.topCardLeftContainer}>
+                  <TouchableOpacity 
+                    style={{flexDirection: 'row', alignItems: 'center'}}
+                    onPress={() => redirectToChat(item.id, item.name)}
+                  >
+                    <Image
+                      source={item.avatar}
+                      resizeMode='cover'
+                      style={styles.avatar}
+                    />
+                    <View style={{marginLeft: 10}}>
+                      <Text style={[styles.name, {
+                        color: dark ? COLORS.secondaryWhite : COLORS.greyscale900
+                      }]}>{item.name}</Text>
+                      <Text style={[styles.taxi, {
+                        color: dark ? COLORS.grayscale200 : COLORS.grayscale700
+                      }]}>{item.taxi}</Text>
+                    </View>
+                  </TouchableOpacity>
+
+                </View>
+
+                <View style={styles.topCardRightContainer}>
+                  <View style={styles.statusContainer}>
+                    <Text style={styles.status}>{item.status}</Text>
+                  </View>
+                  <Text style={[styles.taxiID, {
+                    color: dark ? COLORS.white : COLORS.greyscale900
+                  }]}>{item.taxiID}</Text>
+                </View>
+              </View>
+
+              <View style={[styles.separateLine, {
+                backgroundColor: dark ? COLORS.grayscale700 : COLORS.grayscale200,
+              }]} />
+
+              {
+                isOpen && (
+                  <>
+                    {/* Timing information for route */}
+                    <View style={styles.routeContainer}>
+                      <View style={styles.topRouteContainer}>
+                        <View style={styles.routeIconContainer}>
+                          <Image
+                            source={icons.location2Outline}
+                            resizeMode='contain'
+                            style={styles.routeIcon}
+                          />
+                          <Text style={[styles.routeName, {
+                            color: dark ? COLORS.white : COLORS.greyscale900
+                          }]}>{item.distance}</Text>
+                        </View>
+                        <View style={styles.routeIconContainer}>
+                          <Image
+                            source={icons.clock}
+                            resizeMode='contain'
+                            style={styles.routeIcon}
+                          />
+                          <Text style={[styles.routeName, {
+                            color: dark ? COLORS.white : COLORS.greyscale900
+                          }]}>{item.duration}</Text>
+                        </View>
+                        <View style={styles.routeIconContainer}>
+                          <Image
+                            source={icons.wallet2Outline}
+                            resizeMode='contain'
+                            style={styles.routeIcon}
+                          />
+                          <Text style={[styles.routeName, {
+                            color: dark ? COLORS.white : COLORS.greyscale900
+                          }]}>{item.price}</Text>
+                        </View>
+                      </View>
+                      <View style={styles.bottomRouteContainer}>
+                        <Text style={[styles.bottomRouteName, {
+                          color: dark ? COLORS.white : COLORS.greyscale900
+                        }]}>Date & Time</Text>
+                        <Text style={[styles.date, {
+                          color: dark ? COLORS.white : COLORS.greyscale900
+                        }]}>{item.date} | {item.time}</Text>
+                      </View>
+                    </View>
+
+                    <View style={[styles.separateLine, {
+                      backgroundColor: dark ? COLORS.grayscale700 : COLORS.grayscale200,
+                    }]} />
+
+                    {/* Location information for route */}
+                    <View>
+                      <View style={styles.locationItemContainer}>
+                        <View style={styles.locationIcon1}>
+                          <View style={styles.locationIcon2}>
+                            <Image
+                              source={icons.crosshair}
+                              resizeMode='contain'
+                              style={styles.locationIcon3}
+                            />
+                          </View>
+                        </View>
+                        <View>
+                          <Text style={[styles.baseLocationName, {
+                            color: dark ? COLORS.white : COLORS.greyscale900
+                          }]}>
+                            {item.baseLocationName}
+                          </Text>
+                          <Text style={[styles.baseLocationAddress, {
+                            color: dark ? COLORS.white : COLORS.greyScale800
+                          }]}>
+                            {item.baseLocationAddress}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={styles.locationItemContainer}>
+                        <View style={styles.locationIcon1}>
+                          <View style={styles.locationIcon2}>
+                            <Image
+                              source={icons.location2}
+                              resizeMode='contain'
+                              style={styles.locationIcon3}
+                            />
+                          </View>
+                        </View>
+                        <View>
+                          <Text style={[styles.baseLocationName, {
+                            color: dark ? COLORS.white : COLORS.greyscale900
+                          }]}>
+                            {item.destinationLocationName}
+                          </Text>
+                          <Text style={[styles.baseLocationAddress, {
+                            color: dark ? COLORS.white : COLORS.greyScale800
+                          }]}>
+                            {item.destinationLocationAddress}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+
+                    {/* Location map for route */}
+                    {/* <View style={[styles.locationMapContainer, {
+                      backgroundColor: dark ? COLORS.dark1 : COLORS.white,
+                    }]}>
+                      <MapView
+                        style={styles.mapContainer}
+                        customMapStyle={dark ? mapDarkStyle : mapStandardStyle}
+                        userInterfaceStyle="dark"
+                        initialRegion={{
+                          latitude: 48.8566,
+                          longitude: 2.3522,
+                          latitudeDelta: 0.0922,
+                          longitudeDelta: 0.0421,
+                        }}>
+                        <Marker
+                          coordinate={{
+                            latitude: item.destinationLocationLat,
+                            longitude: item.destinationLocationLong,
+                          }}
+                          image={icons.location2}
+                          title="Move"
+                          description="Address"
+                          onPress={() => console.log("Move to another screen")}
+                        >
+                          <Callout tooltip>
+                            <View>
+                              <View style={styles.bubble}>
+                                <Text
+                                  style={{
+                                    ...FONTS.body4,
+                                    fontWeight: 'bold',
+                                    color: COLORS.black,
+                                  }}
+                                >
+                                  User Address
+                                </Text>
+                              </View>
+                              <View style={styles.arrowBorder} />
+                              <View style={styles.arrow} />
+                            </View>
+                          </Callout>
+                        </Marker>
+                      </MapView>
+                    </View> */}
+
+                    <TouchableOpacity
+                      onPress={() => {}}
+                      style={styles.cancelBtn}>
+                      <Text style={styles.cancelBtnText}>Cancel Booking</Text>
+                    </TouchableOpacity>
+                  </>
+                )
+              }
+              <TouchableOpacity
+                onPress={() => setIsOpen(!isOpen)}
+                style={styles.arrowIconContainer}>
+                <Image
+                  source={isOpen ? icons.arrowUp : icons.arrowDown}
+                  resizeMode="contain"
+                  style={[styles.arrowIcon, {
+                    tintColor: dark ? COLORS.white : COLORS.greyscale900
+                  }]}
                 />
-              </Animated.View>
-            </Marker>
-          );
-        })}
-      </MapView>
-
-      <View style={[styles.searchBox, {
-        backgroundColor: dark ? COLORS.dark1 : COLORS.white,
-      }]}>
-        <TextInput
-          placeholder="Where would you go?"
-          placeholderTextColor={dark ? COLORS.white : "#000"}
-          autoCapitalize="none"
-          onFocus={handleInputFocus}
-          style={{
-            flex: 1,
-            padding: 0,
-            fontFamily: "medium"
-          }}
-        />
-        <TouchableOpacity
-          onPress={() => setDirectionModalVisible(true)}
-          style={{
-            width: 58,
-            height: 50,
-            backgroundColor: COLORS.primary,
-            borderTopRightRadius: 25,
-            borderBottomRightRadius: 25,
-            alignItems: "center",
-            justifyContent: "center",
-            top: -10,
-            right: -10
-          }}>
-          <Ionicons name="search" size={20} color={COLORS.white} />
-        </TouchableOpacity>
-      </View>
-      <ScrollView
-        horizontal
-        scrollEventThrottle={1}
-        showsHorizontalScrollIndicator={false}
-        style={styles.chipsScrollView}
-        contentInset={{ // iOS only
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 20
-        }}
-        contentContainerStyle={{
-          paddingRight: Platform.OS === 'android' ? 20 : 0
-        }}
-      >
-
-      </ScrollView>
-      <Animated.ScrollView
-        ref={_scrollView}
-        horizontal
-        pagingEnabled
-        scrollEventThrottle={1}
-        showsHorizontalScrollIndicator={false}
-        snapToInterval={CARD_WIDTH + 20}
-        snapToAlignment="center"
-        style={styles.scrollView}
-        contentInset={{
-          top: 0,
-          left: SPACING_FOR_CARD_INSET,
-          bottom: 0,
-          right: SPACING_FOR_CARD_INSET
-        }}
-        contentContainerStyle={{
-          paddingHorizontal: Platform.OS === 'android' ? SPACING_FOR_CARD_INSET : 0
-        }}
-        onScroll={Animated.event(
-          [
-            {
-              nativeEvent: {
-                contentOffset: {
-                  x: mapAnimation,
-                }
-              },
-            },
-          ],
-          { useNativeDriver: true }
-        )}
-      >
-        {state.markers.map((marker, index) => (
-          <View style={[styles.card, {
-            backgroundColor: dark ? COLORS.dark1 : COLORS.white,
-          }]} key={index}>
-            <Image
-              source={marker.avatar}
-              style={styles.cardImage}
-              resizeMode="cover"
-            />
-            <TouchableOpacity
-              onPress={() => {
-                setIsFavourite(!isFavourite);
-                setDirectionModalVisible(true);
-              }}
-              style={{
-                position: "absolute",
-                top: 12,
-                right: 12
-              }}
-            >
-              <Ionicons name={isFavourite ? "heart" : "heart-outline"} size={20} color={isFavourite ? COLORS.red : dark ? COLORS.white : COLORS.black} />
-            </TouchableOpacity>
-            <View style={styles.textContent}>
-              <Text numberOfLines={1} style={[styles.cardtitle, {
-                color: dark ? COLORS.white : COLORS.black,
-              }]}>{marker.name}</Text>
-              <StarRating2 ratings={marker.rating} reviews={marker.reviews} />
-              <Text numberOfLines={1} style={[styles.cardDescription, {
-                color: dark ? COLORS.grayscale200 : "#444",
-              }]}>{marker.address}</Text>
-              <Text style={styles.price}>{marker.taxiID}</Text>
+              </TouchableOpacity>
             </View>
-          </View>
-        ))}
-      </Animated.ScrollView>
-      {renderModal()}
-      {renderDirectionModal()}
+          )
+        }}
+      />
     </View>
-  );
+  )
 };
-
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: COLORS.tertiaryWhite,
+    paddingHorizontal: 16,
   },
-  searchBox: {
-    position: 'absolute',
-    marginTop: Platform.OS === 'ios' ? 8 : 20,
+  cardContainer: {
+    width: '100%',
+    backgroundColor: COLORS.white,
+    padding: 16,
+    borderRadius: 32,
+    marginVertical: 18,
+    alignSelf: 'center'
+  },
+  topCardContainer: {
     flexDirection: "row",
-    backgroundColor: '#fff',
-    width: '90%',
-    alignSelf: 'center',
-    borderRadius: 25,
-    padding: 10,
-    shadowColor: '#ccc',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.5,
-    shadowRadius: 5,
-    elevation: 10,
-    top: 52,
-    height: 50
+    justifyContent: "space-between",
+    width: "100%",
   },
-  chipsScrollView: {
-    position: 'absolute',
-    top: Platform.OS === 'ios' ? 90 : 80,
-    paddingHorizontal: 10
-  },
-  chipsIcon: {
-    marginRight: 5,
-  },
-  chipsItem: {
+  topCardLeftContainer: {
     flexDirection: "row",
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: 8,
-    paddingHorizontal: 20,
-    marginHorizontal: 10,
-    height: 35,
-    shadowColor: '#ccc',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.5,
-    shadowRadius: 5,
-    elevation: 10,
+    alignItems: "center",
+    marginTop: 6
   },
-  scrollView: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingVertical: 10,
+  avatar: {
+    width: 52,
+    height: 52,
+    borderRadius: 999,
+    marginRight: 12
   },
-  endPadding: {
-    paddingRight: width - CARD_WIDTH,
-  },
-  card: {
-    elevation: 1,
-    backgroundColor: "#FFF",
-    marginHorizontal: 10,
-    shadowColor: "#000",
-    shadowRadius: 5,
-    shadowOpacity: 0.3,
-    height: CARD_HEIGHT,
-    width: CARD_WIDTH,
-    overflow: "hidden",
-    marginBottom: 92,
-    flexDirection: "row",
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    zIndex: 99999
-  },
-  cardImage: {
-    width: 92,
-    height: 92,
-    alignSelf: "center",
-    borderRadius: 15
-  },
-  textContent: {
-    flex: 2,
-    padding: 10,
-  },
-  cardtitle: {
-    fontSize: 16,
+  name: {
     fontFamily: "bold",
-    marginBottom: 7,
+    fontSize: 16,
+    color: COLORS.greyscale900,
+    marginBottom: 8
+  },
+  taxi: {
+    fontFamily: "regular",
+    fontSize: 12,
+    color: COLORS.grayscale700,
+  },
+  topCardRightContainer: {
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    alignItems: "flex-end"
+  },
+  statusContainer: {
+    width: 54,
+    height: 24,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 6,
+    backgroundColor: COLORS.primary
+  },
+  status: {
+    fontFamily: "regular",
+    fontSize: 10,
     color: COLORS.black
   },
-  cardDescription: {
+  taxiID: {
+    fontFamily: "semiBold",
     fontSize: 12,
-    color: "#444",
+    color: COLORS.greyscale900,
+    marginTop: 6
+  },
+  separateLine: {
+    height: 1,
+    backgroundColor: COLORS.grayscale200,
+    width: "100%",
     marginTop: 12
   },
-  markerWrap: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: 50,
-    height: 50,
+  routeContainer: {
+
   },
-  marker: {
-    width: 30,
-    height: 30,
+  topRouteContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginTop: 12
   },
-  button: {
-    alignItems: 'center',
-    marginTop: 5
+  routeIconContainer: {
+    flexDirection: "row",
+    alignItems: "center"
   },
-  signIn: {
-    width: '100%',
-    padding: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 3
-  },
-  textSign: {
-    fontSize: 14,
-    fontWeight: 'bold'
-  },
-  categoryIcon: {
-    height: 18,
-    width: 18,
-    tintColor: COLORS.black,
+  routeIcon: {
+    width: 24,
+    height: 24,
+    tintColor: COLORS.grayscale400,
     marginRight: 8
   },
-  typeContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 6
-  },
-  type: {
-    fontSize: 12,
-    fontFamily: "bold",
-    color: COLORS.primary,
-    marginLeft: 12
-  },
-  price: {
+  routeName: {
     fontSize: 14,
+    color: COLORS.greyscale900,
+    fontFamily: "semiBold",
+  },
+  bottomRouteContainer: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+    marginTop: 16
+  },
+  bottomRouteName: {
+    fontSize: 12,
+    color: COLORS.greyscale900,
+    fontFamily: "regular",
+  },
+  date: {
+    fontSize: 14,
+    color: COLORS.greyscale900,
+    fontFamily: "semiBold",
+  },
+  locationItemContainer: {
+    flexDirection: "row",
+    width: "100%",
+    marginVertical: 12,
+    alignItems: "center"
+  },
+  locationIcon1: {
+    height: 52,
+    width: 52,
+    borderRadius: 999,
+    marginRight: 12,
+    backgroundColor: "rgba(254, 187, 27, 0.3)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  locationIcon2: {
+    height: 36,
+    width: 36,
+    borderRadius: 999,
+    backgroundColor: COLORS.primary,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  locationIcon3: {
+    width: 16,
+    height: 16,
+    tintColor: COLORS.black
+  },
+  baseLocationName: {
+    fontSize: 17,
+    color: COLORS.greyscale900,
     fontFamily: "bold",
-    color: COLORS.red,
+  },
+  baseLocationAddress: {
+    fontSize: 14,
+    color: COLORS.greyScale800,
+    fontFamily: "regular",
+    marginTop: 8
+  },
+  locationMapContainer: {
+    height: 160,
+    width: "100%",
+    borderRadius: 12,
+    marginVertical: 16
+  },
+  mapContainer: {
+    ...StyleSheet.absoluteFillObject,
+    flex: 1,
+    borderRadius: 12,
+    backgroundColor: COLORS.dark2
+  },
+  viewMapContainer: {
+    height: 50,
+    backgroundColor: COLORS.gray,
+    alignItems: "center",
+    justifyContent: "center",
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25
+  },
+  bubble: {
+    flexDirection: 'column',
+    alignSelf: 'flex-start',
+    backgroundColor: '#fff',
+    borderRadius: 6,
+    borderColor: '#ccc',
+    borderWidth: 0.5,
+    padding: 15,
+    width: 'auto',
+  },
+  // Arrow below the bubble
+  arrow: {
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+    borderTopColor: '#fff',
+    borderWidth: 16,
+    alignSelf: 'center',
+    marginTop: -32,
+  },
+  arrowBorder: {
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+    borderTopColor: '#007a87',
+    borderWidth: 16,
+    alignSelf: 'center',
+    marginTop: -0.5,
+  },
+  cancelBtn: {
+    width: "100%",
+    height: 42,
+    borderRadius: 24,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: 'red',
     marginTop: 6
   },
-  modalTitle: {
-    fontSize: 20,
-    fontFamily: "bold",
-    color: COLORS.black,
-    textAlign: "center",
-    marginVertical: 12
+  cancelBtnText: {
+    color: COLORS.greyscale900,
+    fontFamily: "semiBold",
+    fontSize: 16
   },
-  modalSubtitle: {
-    fontSize: 16,
-    fontFamily: "regular",
-    color: COLORS.black,
-    textAlign: "center",
-    marginVertical: 12
-  },
-  modalContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(0,0,0,0.56)"
-  },
-  modalSubContainer: {
-    height: 520,
-    width: SIZES.width * 0.9,
-    backgroundColor: COLORS.white,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 16
-  },
-  modalIllustration: {
-    height: 180,
-    width: 180,
-    marginVertical: 22
-  },
-  successBtn: {
+  arrowIconContainer: {
     width: "100%",
-    marginTop: 12,
-    borderRadius: 32
-  },
-  receiptBtn: {
-    width: "100%",
-    marginTop: 12,
-    borderRadius: 32,
-    backgroundColor: COLORS.tansparentPrimary,
-    borderColor: COLORS.tansparentPrimary
-  },
-  editPencilIcon: {
-    width: 42,
-    height: 42,
-    tintColor: COLORS.black,
-    position: "absolute",
-    top: 76,
-    left: 58,
-  },
-  backgroundIllustration: {
-    height: 150,
-    width: 150,
-    marginVertical: 22,
     alignItems: "center",
-    justifyContent: "center"
+    marginTop: 12
   },
-});
+  arrowIcon: {
+    height: 18,
+    width: 18,
+    tintColor: COLORS.black
+  }
+})
 
-export default Home
+export default ActiveBookings

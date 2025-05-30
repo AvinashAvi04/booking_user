@@ -111,35 +111,6 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="wallet"
-        options={{
-          title: "",
-          tabBarIcon: ({ focused }: { focused: boolean }) => {
-            return (
-              <View style={{
-                alignItems: "center",
-                paddingTop: 16,
-                width: SIZES.width/4
-              }}>
-                <Image
-                  source={focused ? icons.wallet2 : icons.wallet2Outline}
-                  contentFit="contain"
-                  style={{
-                    width: 24,
-                    height: 24,
-                    tintColor: focused ? COLORS.primary : dark ? COLORS.gray3 : COLORS.gray3,
-                  }}
-                />
-                <Text style={{
-                  ...FONTS.body4,
-                  color: focused ? COLORS.primary : dark ? COLORS.gray3 : COLORS.gray3,
-                }}>Wallet</Text>
-              </View>
-            )
-          },
-        }}
-      />
-      <Tabs.Screen
         name="profile"
         options={{
           title: "",
