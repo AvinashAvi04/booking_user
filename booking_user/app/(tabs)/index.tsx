@@ -48,14 +48,13 @@ const BookingForm = () => {
   const styles = createStyles(colors);
 
   const handleWelcomeSubmit = () => {
-    if (!userName.trim()) {
+    if (!userName.trim() || (email ? !userPhone.trim() : !userEmail.trim())) {
       Alert.alert(
-        "Name & Email Required",
-        "Please enter your name & email to continue"
+        "Required Fields Missing",
+        `Please enter your ${!userName.trim() ? 'name' : ''}${!userName.trim() && (email ? !userPhone.trim() : !userEmail.trim()) ? ' and ' : ''}${email ? !userPhone.trim() ? 'phone number' : '' : !userEmail.trim() ? 'email' : ''} to continue`
       );
       return;
     }
-    // Alert.alert(`Welcome, ${userName}!`, "Enjoy your ride with us!");
     setShowWelcomeModal(false);
   };
 
@@ -117,16 +116,13 @@ const BookingForm = () => {
       animationType="slide"
       transparent={true}
       visible={showWelcomeModal}
-      onRequestClose={() => {}}
+      onRequestClose={() => {
+        // Prevent closing with back button on Android
+        return true;
+      }}
     >
       <View style={styles.modalOverlay}>
         <View style={[styles.modalContent]}>
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => setShowWelcomeModal(false)}
-          >
-            <Text style={styles.closeButtonText}>×</Text>
-          </TouchableOpacity>
 
           <MaterialIcons
             name="account-circle"
@@ -249,11 +245,11 @@ const createStyles = (colors: ThemeColors) =>
       justifyContent: "center",
       alignItems: "center",
       backgroundColor: "rgba(0, 0, 0, 0.85)",
-      padding: SIZES.padding * 2,
+      padding: SIZES.padding,
     },
     modalContent: {
       width: "100%",
-      padding: SIZES.padding * 2.5,
+      padding: SIZES.padding,
       borderRadius: SIZES.radius,
       alignItems: "center",
       backgroundColor: COLORS.white,
@@ -263,26 +259,15 @@ const createStyles = (colors: ThemeColors) =>
       shadowRadius: 12,
       elevation: 8,
     },
-    closeButton: {
-      position: "absolute",
-      top: SIZES.padding,
-      right: SIZES.padding,
-      padding: SIZES.padding,
-    },
-    closeButtonText: {
-      fontSize: 24,
-      color: COLORS.grayscale700,
-      lineHeight: 24,
-    },
     icon: {
-      marginBottom: SIZES.padding2,
+      marginBottom: SIZES.padding,
     },
     titleWithIcon: {
-      marginTop: SIZES.padding2,
+      marginTop: SIZES.padding,
     },
     modalTitle: {
       ...FONTS.h2,
-      marginBottom: SIZES.padding3,
+      marginBottom: SIZES.padding,
       textAlign: "center",
       color: COLORS.black,
     },
@@ -290,7 +275,7 @@ const createStyles = (colors: ThemeColors) =>
       ...FONTS.body4,
       textAlign: "center",
       color: COLORS.grayscale700,
-      marginBottom: SIZES.padding * 1.5,
+      marginBottom: SIZES.padding,
       lineHeight: 22,
     },
     submitButton: {
@@ -361,8 +346,9 @@ const createStyles = (colors: ThemeColors) =>
     },
     contentContainer: {
       // flex: 1,
-      paddingHorizontal: SIZES.padding3,
+      paddingHorizontal: SIZES.padding2,
       backgroundColor: colors.background,
+      width: '100%',
     },
     tabContent: {
       paddingVertical: SIZES.padding3,
