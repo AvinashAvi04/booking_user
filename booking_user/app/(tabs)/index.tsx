@@ -40,10 +40,11 @@ const BookingForm = () => {
   const { userType, isSignup, phone, email } = useLocalSearchParams();
   const isFirstTimeUser = isSignup === "true";
   const [activeTab, setActiveTab] = useState<TabType>("oneWay");
-  const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(isFirstTimeUser);
+  const [showWelcomeModal, setShowWelcomeModal] =
+    useState<boolean>(isFirstTimeUser);
   const [userName, setUserName] = useState<string>("");
   const [userPhone, setUserPhone] = useState<string>("");
-  const [userEmail, setUserEmail] = useState<string>(""); 
+  const [userEmail, setUserEmail] = useState<string>("");
   const { colors } = useTheme() as { colors: ThemeColors };
   const styles = createStyles(colors);
 
@@ -51,7 +52,19 @@ const BookingForm = () => {
     if (!userName.trim() || (email ? !userPhone.trim() : !userEmail.trim())) {
       Alert.alert(
         "Required Fields Missing",
-        `Please enter your ${!userName.trim() ? 'name' : ''}${!userName.trim() && (email ? !userPhone.trim() : !userEmail.trim()) ? ' and ' : ''}${email ? !userPhone.trim() ? 'phone number' : '' : !userEmail.trim() ? 'email' : ''} to continue`
+        `Please enter your ${!userName.trim() ? "name" : ""}${
+          !userName.trim() && (email ? !userPhone.trim() : !userEmail.trim())
+            ? " and "
+            : ""
+        }${
+          email
+            ? !userPhone.trim()
+              ? "phone number"
+              : ""
+            : !userEmail.trim()
+            ? "email"
+            : ""
+        } to continue`
       );
       return;
     }
@@ -123,7 +136,6 @@ const BookingForm = () => {
     >
       <View style={styles.modalOverlay}>
         <View style={[styles.modalContent]}>
-
           <MaterialIcons
             name="account-circle"
             size={48}
@@ -152,7 +164,9 @@ const BookingForm = () => {
             />
             <Input
               id={email ? "phone" : "email"}
-              placeholder={email ? "Enter your phone number" : "Enter your email"}
+              placeholder={
+                email ? "Enter your phone number" : "Enter your email"
+              }
               placeholderTextColor={colors.textSecondary || colors.text}
               value={email ? userPhone : userEmail}
               onInputChanged={(id, text) => {
@@ -348,7 +362,7 @@ const createStyles = (colors: ThemeColors) =>
       // flex: 1,
       paddingHorizontal: SIZES.padding2,
       backgroundColor: colors.background,
-      width: '100%',
+      width: "100%",
     },
     tabContent: {
       paddingVertical: SIZES.padding3,
