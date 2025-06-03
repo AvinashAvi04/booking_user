@@ -4,8 +4,9 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../components/Header";
 import { COLORS } from "../constants";
@@ -13,12 +14,30 @@ import { OtpInput } from "react-native-otp-entry";
 import Button from "../components/Button";
 import { useTheme } from "../theme/ThemeProvider";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import axios from "axios";
+import { REACT_APP_BASE_URL } from "@env";
+import { reducer } from "@/utils/reducers/formReducers";
+
+const isTestMode = true;
+const initialState = {
+  inputValues: {
+    mobile: isTestMode ? "9999999999" : "",
+    password: isTestMode ? "**********" : "",
+  },
+  inputValidities: {
+    mobile: false,
+    password: false,
+  },
+  formIsValid: false,
+};
 
 const OTPVerification = () => {
   const params = useLocalSearchParams();
   const router = useRouter();
   const [time, setTime] = useState(50);
   const { colors, dark } = useTheme();
+
+  const [formState, dispatchFormState] = useReducer(reducer, initialState);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -29,6 +48,23 @@ const OTPVerification = () => {
       clearInterval(intervalId);
     };
   }, []);
+
+  const handleVerify = () => {
+    axios
+      .post(REACT_APP_BASE_URL + "/api/v1/user/auth/verify-otp/", {
+        phone_number: formState.inputValues.mobile,
+        otp_code: "1234", // Replace with actual OTP input
+        user_type: "user",
+      })
+      .then((response) => {
+        console.log("OTP verified successfully:", response.data);
+        // router.push({ pathname: "/(tabs)", params: params });
+      })
+      .catch((error) => {
+        // console.error("Error sending OTP:", error);
+        Alert.alert("Please try again.");
+      });
+  };
 
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
@@ -101,7 +137,7 @@ const OTPVerification = () => {
           title="Verify"
           filled
           style={styles.button}
-          onPress={() => router.push({pathname: "/(tabs)", params:params})}
+          onPress={() => handleVerify()}
         />
       </View>
     </SafeAreaView>

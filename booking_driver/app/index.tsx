@@ -14,7 +14,7 @@ const Onboarding1 = () => {
   const router = useRouter();
   useEffect(() => {
     const timeout = setTimeout(() => {
-      router.replace("/(tabs)");
+      router.replace("/phonelogin");
     }, 1500);
 
     return () => clearTimeout(timeout);
@@ -58,21 +58,21 @@ const styles = StyleSheet.create({
     marginVertical: 12,
   },
   logoContainer: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    alignSelf: 'flex-start',
+    flexDirection: "column",
+    alignItems: "flex-start",
+    alignSelf: "flex-start",
   },
   logoName: {
     fontSize: 76,
     color: COLORS.primary,
     fontFamily: "extraBold",
-    textAlign: 'left',
+    textAlign: "left",
   },
   logoText: {
     fontSize: 18,
     color: COLORS.primary,
-    fontFamily: 'bold',
-    textAlign: 'left',
+    fontFamily: "bold",
+    textAlign: "left",
     marginTop: -10,
   },
   subtitle: {
