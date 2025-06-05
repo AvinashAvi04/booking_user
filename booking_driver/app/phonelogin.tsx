@@ -21,6 +21,8 @@ import SocialButton from "../components/SocialButton";
 import OrSeparator from "../components/OrSeparator";
 import { useTheme } from "../theme/ThemeProvider";
 import { useNavigation, useRouter } from "expo-router";
+import axios from "axios";
+import { REACT_APP_BASE_URL } from "@env";
 
 const isTestMode = true;
 
@@ -66,27 +68,12 @@ const Login = () => {
     console.log("Form State Updated:", formState.inputValues.mobile);
   }, [formState]);
 
-  // Error handling is now silent
   useEffect(() => {
     if (error) {
       console.error(error);
     }
   }, [error]);
 
-  // Implementing apple authentication
-  const appleAuthHandler = () => {
-    console.log("Apple Authentication");
-  };
-
-  // Implementing facebook authentication
-  const facebookAuthHandler = () => {
-    console.log("Facebook Authentication");
-  };
-
-  // Implementing google authentication
-  const googleAuthHandler = () => {
-    console.log("Google Authentication");
-  };
 
   useEffect(() => {
     dispatchFormState({
@@ -104,7 +91,24 @@ const Login = () => {
   const handleLogin = () => {
     Keyboard.dismiss();
     if (!isMobileValid()) return;
-    router.replace({pathname:"/otpverification", params:{userType: "driver", isSignup: "true", phone: formState.inputValues.mobile, email: null}});
+    axios
+      .post(REACT_APP_BASE_URL + "/api/v1/driver/auth/send-otp/", {
+        phone_number: formState.inputValues.mobile,
+        user_type: "driver",
+      })
+      .then((response) => {
+        router.replace({
+          pathname: "/otpverification",
+          params: {
+            userType: "driver",
+            phone: formState.inputValues.mobile,
+            email: null,
+          },
+        });
+      })
+      .catch((error) => {
+        Alert.alert("Login Failed", "Unable to send OTP. Please try again.");
+      });
   };
 
   return (

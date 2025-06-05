@@ -4,9 +4,10 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
   Alert,
 } from "react-native";
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../components/Header";
 import { COLORS } from "../constants";
@@ -16,28 +17,17 @@ import { useTheme } from "../theme/ThemeProvider";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import axios from "axios";
 import { REACT_APP_BASE_URL } from "@env";
-import { reducer } from "@/utils/reducers/formReducers";
-
-const isTestMode = true;
-const initialState = {
-  inputValues: {
-    mobile: isTestMode ? "9999999999" : "",
-    password: isTestMode ? "**********" : "",
-  },
-  inputValidities: {
-    mobile: false,
-    password: false,
-  },
-  formIsValid: false,
-};
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const OTPVerification = () => {
   const params = useLocalSearchParams();
   const router = useRouter();
   const [time, setTime] = useState(50);
+  const [otp, setOtp] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [token, setToken] = useState("");
   const { colors, dark } = useTheme();
-
-  const [formState, dispatchFormState] = useReducer(reducer, initialState);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -49,20 +39,110 @@ const OTPVerification = () => {
     };
   }, []);
 
-  const handleVerify = () => {
+  const handleVerifyOTP = async () => {
+    if (otp.length !== 4) {
+      setError("Please enter a valid 4-digit OTP");
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+
+    try {
+      // 1. Verify OTP
+      const response = await axios.post(
+        `${REACT_APP_BASE_URL}/api/v1/user/auth/verify-otp/`,
+        {
+          phone_number: params.phone,
+          otp_code: otp,
+          user_type: "driver",
+        }
+      );
+
+      // 2. Get token from response
+      const token = response.data.access || response.data.token;
+      if (!token) {
+        throw new Error("No token received");
+      }
+
+      // 3. Save token to AsyncStorage
+      await AsyncStorage.setItem('authToken', token);
+      
+      try {
+        // 4. Fetch user details with the token
+        const userResponse = await axios.get(
+          `${REACT_APP_BASE_URL}/api/v1/user/me/`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        // 5. Navigate to edit profile for existing user
+        router.push({
+          pathname: "/(tabs)",
+          params: {
+            ...params,
+            ...userResponse.data,
+            token: token,
+            isSignUp: "false",
+          },
+        });
+      } catch (userError) {
+        console.error("Error fetching user details:", userError);
+        setError("Failed to load user details. Please try again.");
+      }
+    } catch (error: unknown) {
+      console.error("OTP verification failed:", error);
+      
+      // Type guard to check if error is an object and has response property
+      if (error && typeof error === 'object' && 'response' in error) {
+        const apiError = error as {
+          response?: {
+            data?: {
+              detail?: string;
+            };
+          };
+        };
+        
+        if (apiError.response?.data?.detail === "User not found") {
+          // Navigate to edit profile for new user
+          router.push({
+            pathname: "/(tabs)",
+            params: { 
+              ...params, 
+              isSignUp: "true",
+              phone: params.phone,
+            },
+          });
+        } else {
+          setError("Invalid OTP. Please try again.");
+        }
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendOTP = () => {
+    if (time > 0) return;
+    
     axios
-      .post(REACT_APP_BASE_URL + "/api/v1/user/auth/verify-otp/", {
-        phone_number: formState.inputValues.mobile,
-        otp_code: "1234", // Replace with actual OTP input
+      .post(REACT_APP_BASE_URL + "/api/v1/user/auth/send-otp/", {
+        phone_number: params.phone,
         user_type: "user",
       })
-      .then((response) => {
-        console.log("OTP verified successfully:", response.data);
-        // router.push({ pathname: "/(tabs)", params: params });
+      .then(() => {
+        setTime(50);
+        setError("");
       })
       .catch((error) => {
-        // console.error("Error sending OTP:", error);
-        Alert.alert("Please try again.");
+        console.error("Failed to resend OTP:", error);
+        setError("Failed to resend OTP. Please try again.");
       });
   };
 
@@ -79,19 +159,19 @@ const OTPVerification = () => {
               },
             ]}
           >
-            Code has been send to {params.phone}
+            Code has been sent to {params.phone}
           </Text>
           <OtpInput
             numberOfDigits={4}
-            onTextChange={(text) => console.log(text)}
+            onTextChange={setOtp}
             focusColor={COLORS.primary}
             focusStickBlinkingDuration={500}
-            onFilled={(text) => console.log(`OTP is ${text}`)}
+            onFilled={handleVerifyOTP}
             theme={{
               pinCodeContainerStyle: {
                 backgroundColor: dark ? COLORS.dark2 : COLORS.secondaryWhite,
-                borderColor: dark ? COLORS.gray : COLORS.secondaryWhite,
-                borderWidth: 0.4,
+                borderColor: error ? COLORS.red : (dark ? COLORS.gray : COLORS.secondaryWhite),
+                borderWidth: error ? 1 : 0.4,
                 borderRadius: 10,
                 height: 58,
                 width: 58,
@@ -101,44 +181,53 @@ const OTPVerification = () => {
               },
             }}
           />
+          {error ? <Text style={styles.errorText}>{error}</Text> : null}
           <View style={styles.codeContainer}>
             <TouchableOpacity
               disabled={time > 0}
               style={{ padding: 8, paddingRight: 0 }}
-              onPress={() => {
-                if (time === 0) setTime(50);
-              }}
+              onPress={handleResendOTP}
             >
               <Text
                 style={[
                   styles.code,
                   {
-                    color: dark ? COLORS.white : COLORS.greyscale900,
+                    color: time > 0 
+                      ? (dark ? COLORS.gray : COLORS.greyscale500)
+                      : COLORS.primary,
                   },
                 ]}
               >
-                Resend code in
+                {time > 0 ? 'Resend code in' : 'Resend OTP'}
               </Text>
             </TouchableOpacity>
-            <Text style={styles.time}>{`  ${time} `}</Text>
-            <Text
-              style={[
-                styles.code,
-                {
-                  color: dark ? COLORS.white : COLORS.greyscale900,
-                },
-              ]}
-            >
-              s
-            </Text>
+            {time > 0 && (
+              <>
+                <Text style={styles.time}>{`  ${time} `}</Text>
+                <Text
+                  style={[
+                    styles.code,
+                    {
+                      color: dark ? COLORS.white : COLORS.greyscale900,
+                    },
+                  ]}
+                >
+                  s
+                </Text>
+              </>
+            )}
           </View>
         </ScrollView>
         <Button
-          title="Verify"
+          title={isLoading ? "Verifying..." : "Verify"}
           filled
-          style={styles.button}
-          onPress={() => handleVerify()}
+          style={[styles.button, (isLoading || otp.length !== 4) && { opacity: 0.7 }]}
+          onPress={handleVerifyOTP}
+          disabled={isLoading || otp.length !== 4}
         />
+        {isLoading && (
+          <ActivityIndicator size="large" color={COLORS.primary} style={styles.loader} />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -190,6 +279,16 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 32,
+    opacity: 1,
+  },
+  errorText: {
+    color: COLORS.red,
+    textAlign: 'center',
+    marginTop: 8,
+    fontFamily: 'regular',
+  },
+  loader: {
+    marginTop: 16,
   },
 });
 
