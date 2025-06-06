@@ -1,7 +1,21 @@
-module.exports = {
-  presets: ["babel-preset-expo"], // or react-native preset
-  plugins: [
-    "react-native-reanimated/plugin", // DO NOT put version here manually
-    "module:react-native-dotenv",
-  ],
+module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: ["babel-preset-expo"],
+    plugins: [
+      ["module:react-native-dotenv"],
+      [
+        "module-resolver",
+        {
+          root: ["./"],
+          alias: {
+            "@": "./",
+            "@theme": "./theme",
+            "@components": "./components",
+            "@constants": "./constants",
+          },
+        },
+      ],
+    ],
+  };
 };

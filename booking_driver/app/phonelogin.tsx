@@ -21,6 +21,8 @@ import SocialButton from "../components/SocialButton";
 import OrSeparator from "../components/OrSeparator";
 import { useTheme } from "../theme/ThemeProvider";
 import { useNavigation, useRouter } from "expo-router";
+import axios from "axios";
+import { REACT_APP_BASE_URL } from "@env";
 
 const isTestMode = true;
 
@@ -101,10 +103,37 @@ const Login = () => {
     return mobile && /^\d{10}$/.test(mobile);
   }, [formState.inputValues.mobile]);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     Keyboard.dismiss();
     if (!isMobileValid()) return;
-    router.replace({pathname:"/otpverification", params:{userType: "driver", isSignup: "true", phone: formState.inputValues.mobile, email: null}});
+
+    try {
+      const response = await axios.post(
+        `${REACT_APP_BASE_URL}/api/v1/users/auth/send-otp/`,
+        {
+          phone_number: `+91${formState.inputValues.mobile}`,
+          user_type: "driver",
+        }
+      );
+
+      if (
+        response.data.detail ===
+        "Verification code sent successfully to your phone number."
+      ) {
+        router.replace({
+          pathname: "/otpverification",
+          params: {
+            userType: "driver",
+            isSignup: "true",
+            phone: formState.inputValues.mobile,
+            email: null,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+      Alert.alert("Error", "Failed to send OTP. Please try again.");
+    }
   };
 
   return (

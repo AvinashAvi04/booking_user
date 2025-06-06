@@ -17,12 +17,12 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import axios from "axios";
 import { REACT_APP_BASE_URL } from "@env";
 import { reducer } from "@/utils/reducers/formReducers";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const isTestMode = true;
 const initialState = {
   inputValues: {
-    mobile: isTestMode ? "9999999999" : "",
-    password: isTestMode ? "**********" : "",
+    mobile: "",
+    password: "",
   },
   inputValidities: {
     mobile: false,
@@ -36,6 +36,8 @@ const OTPVerification = () => {
   const router = useRouter();
   const [time, setTime] = useState(50);
   const { colors, dark } = useTheme();
+  const [otp, setOtp] = useState("");
+  const [error, setError] = useState("");
 
   const [formState, dispatchFormState] = useReducer(reducer, initialState);
 
@@ -49,21 +51,49 @@ const OTPVerification = () => {
     };
   }, []);
 
-  const handleVerify = () => {
-    axios
-      .post(REACT_APP_BASE_URL + "/api/v1/user/auth/verify-otp/", {
-        phone_number: formState.inputValues.mobile,
-        otp_code: "1234", // Replace with actual OTP input
+  const handleVerify = async () => {
+    if (!otp || otp.length !== 4) {
+      setError("Please enter a valid OTP");
+      return;
+    }
+
+    setError("");
+    try {
+      console.log("Sending OTP verification request with:", {
+        phone_number: params.phone,
+        otp_code: otp,
         user_type: "user",
-      })
-      .then((response) => {
-        console.log("OTP verified successfully:", response.data);
-        // router.push({ pathname: "/(tabs)", params: params });
-      })
-      .catch((error) => {
-        // console.error("Error sending OTP:", error);
-        Alert.alert("Please try again.");
       });
+
+      const response = await axios.post(
+        REACT_APP_BASE_URL + "/api/v1/users/auth/verify-otp/",
+        {
+          phone_number: params.phone,
+          otp_code: otp,
+          user_type: "user",
+        }
+      );
+
+      console.log("Server response status:", response.status);
+      console.log("Server response data:", response.data);
+
+      if (response.status === 200) {
+        try {
+          // Store tokens in AsyncStorage
+          await AsyncStorage.setItem("accessToken", response.data.access);
+          await AsyncStorage.setItem("refreshToken", response.data.refresh);
+
+          console.log("Tokens stored successfully");
+          router.replace({ pathname: "/(tabs)", params: params });
+        } catch (storageError) {
+          console.error("Storage error:", storageError);
+          setError("Failed to store authentication tokens");
+        }
+      }
+    } catch (error: any) {
+      console.error("Error message:", error.message);
+      setError("Failed to verify OTP. Please try again.");
+    }
   };
 
   return (
@@ -83,14 +113,24 @@ const OTPVerification = () => {
           </Text>
           <OtpInput
             numberOfDigits={4}
-            onTextChange={(text) => console.log(text)}
+            onTextChange={(text) => {
+              setOtp(text);
+              setError("");
+            }}
             focusColor={COLORS.primary}
             focusStickBlinkingDuration={500}
-            onFilled={(text) => console.log(`OTP is ${text}`)}
+            onFilled={(text) => {
+              setOtp(text);
+              setError("");
+            }}
             theme={{
               pinCodeContainerStyle: {
                 backgroundColor: dark ? COLORS.dark2 : COLORS.secondaryWhite,
-                borderColor: dark ? COLORS.gray : COLORS.secondaryWhite,
+                borderColor: error
+                  ? COLORS.error
+                  : dark
+                  ? COLORS.gray
+                  : COLORS.secondaryWhite,
                 borderWidth: 0.4,
                 borderRadius: 10,
                 height: 58,
@@ -101,6 +141,7 @@ const OTPVerification = () => {
               },
             }}
           />
+          {error ? <Text style={styles.errorText}>{error}</Text> : null}
           <View style={styles.codeContainer}>
             <TouchableOpacity
               disabled={time > 0}
@@ -190,6 +231,14 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 32,
+  },
+  errorText: {
+    color: COLORS.error,
+    textAlign: "center",
+    marginTop: 8,
+    marginBottom: 16,
+    fontFamily: "regular",
+    fontSize: 14,
   },
 });
 

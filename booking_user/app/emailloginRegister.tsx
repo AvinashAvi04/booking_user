@@ -20,6 +20,7 @@ import { useNavigation, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { REACT_APP_BASE_URL } from "@env";
+import { useLocalSearchParams, useSearchParams } from "expo-router/build/hooks";
 
 const initialState = {
   inputValues: {
@@ -61,11 +62,16 @@ const EmailLogin = () => {
     [dispatchFormState]
   );
 
-  useEffect(() => {
-    if (error) {
-      console.error(error);
-    }
-  }, [error]);
+  // const params = useLocalSearchParams();
+  // useEffect(() => {
+  //   if (params.email) {
+  //     dispatchFormState({
+  //       inputId: "email",
+  //       inputValue: params.email as string,
+  //       validationResult: true,
+  //     });
+  //   }
+  // }, [params.email]);
 
   const isEmailValid = () => {
     return (
@@ -90,27 +96,21 @@ const EmailLogin = () => {
 
     try {
       const response = await axios.post(
-        `${REACT_APP_BASE_URL}/api/v1/users/auth/register/`,
+        `${REACT_APP_BASE_URL}/api/v1/users/auth/token/`,
         {
           email: formState.inputValues.email,
           password: formState.inputValues.password,
-          user_type: "user",
+          // user_type: "user",
         }
       );
 
-      if (response.status === 200 || response.status === 201) {
+      if (response.status === 200) {
         // Store the access token
         await AsyncStorage.setItem("accessToken", response.data.access);
 
         // Navigate to the home screen
         router.replace({
-          pathname: "/emailloginRegister",
-          params: {
-            userType: "user",
-            isSignup: "false",
-            phone: null,
-            email: formState.inputValues.email,
-          },
+          pathname: "/(tabs)",
         });
       }
     } catch (error: any) {
@@ -178,7 +178,7 @@ const EmailLogin = () => {
               },
             ]}
           >
-            Register to Account
+            Login to your Account
           </Text>
           <Input
             id="email"
@@ -219,11 +219,9 @@ const EmailLogin = () => {
                 Forgot the password?
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => router.push("/emailloginRegister")}
-            >
+            <TouchableOpacity onPress={() => router.push("/emaillogin")}>
               <Text style={styles.forgotPasswordBtnText}>
-                Already have an account?
+                Don't have an account?
               </Text>
             </TouchableOpacity>
           </View>

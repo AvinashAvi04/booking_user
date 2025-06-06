@@ -4,6 +4,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,12 +14,20 @@ import { OtpInput } from "react-native-otp-entry";
 import Button from "../components/Button";
 import { useTheme } from "../theme/ThemeProvider";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import axios from "axios";
+import { REACT_APP_BASE_URL } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const OTPVerification = () => {
+  // to access token
+  //   const accessToken = await AsyncStorage.getItem('accessToken');
+  // const refreshToken = await AsyncStorage.getItem('refreshToken');
+
   const params = useLocalSearchParams();
   const router = useRouter();
   const [time, setTime] = useState(50);
   const { colors, dark } = useTheme();
+  const [otp, setOtp] = useState("");
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -29,6 +38,39 @@ const OTPVerification = () => {
       clearInterval(intervalId);
     };
   }, []);
+
+  const handleVerify = async () => {
+    if (otp.length !== 4) {
+      Alert.alert("Error", "Please enter a valid 4-digit OTP");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `${REACT_APP_BASE_URL}/api/v1/users/auth/verify-otp/`,
+        {
+          phone_number: `+91${params.phone}`,
+          otp_code: otp,
+          user_type: "driver",
+        }
+      );
+
+      if (response.data.access && response.data.refresh) {
+        // Store tokens in AsyncStorage
+        await AsyncStorage.setItem("accessToken", response.data.access);
+        await AsyncStorage.setItem("refreshToken", response.data.refresh);
+
+        // Navigate to edit profile
+        router.push({
+          pathname: "/editprofile",
+          params: params,
+        });
+      }
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+      Alert.alert("Error", "Failed to verify OTP. Please try again.");
+    }
+  };
 
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
@@ -47,10 +89,10 @@ const OTPVerification = () => {
           </Text>
           <OtpInput
             numberOfDigits={4}
-            onTextChange={(text) => console.log(text)}
+            onTextChange={(text) => setOtp(text)}
             focusColor={COLORS.primary}
             focusStickBlinkingDuration={500}
-            onFilled={(text) => console.log(`OTP is ${text}`)}
+            onFilled={(text) => setOtp(text)}
             theme={{
               pinCodeContainerStyle: {
                 backgroundColor: dark ? COLORS.dark2 : COLORS.secondaryWhite,
@@ -101,7 +143,7 @@ const OTPVerification = () => {
           title="Verify"
           filled
           style={styles.button}
-          onPress={() => router.push({pathname: "/editprofile", params:params})}
+          onPress={handleVerify}
         />
       </View>
     </SafeAreaView>

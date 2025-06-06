@@ -104,27 +104,32 @@ const Login = () => {
   }, [formState.inputValues.mobile]);
 
   const handleLogin = () => {
+    console.log("Login Button Pressed", REACT_APP_BASE_URL);
     Keyboard.dismiss();
 
     if (!isMobileValid()) return;
 
     axios
-      .post(REACT_APP_BASE_URL + "/api/v1/user/auth/send-otp/", {
+      .post(REACT_APP_BASE_URL + "/api/v1/users/auth/send-otp/", {
         phone_number: formState.inputValues.mobile,
         user_type: "user",
       })
       .then((response) => {
         // Optionally check response status or content
         // console.log("OTP sent:", response.data.detail);
-        router.replace({
-          pathname: "/otpverification",
-          params: {
-            userType: "user",
-            isSignup: "true",
-            phone: formState.inputValues.mobile,
-            email: null,
-          },
-        });
+        if (response.status == 200) {
+          router.replace({
+            pathname: "/otpverification",
+            params: {
+              userType: "user",
+              isSignup: "true",
+              phone: formState.inputValues.mobile,
+              email: null,
+            },
+          });
+        } else {
+          Alert.alert("Login Failed", "Unable to send OTP. Please try again.");
+        }
       })
       .catch((error) => {
         // console.error("Error sending OTP:", error);

@@ -34,6 +34,9 @@ import { Image } from "expo-image";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import Input2 from "@/components/Input2";
 import { MaterialIcons } from "@expo/vector-icons";
+import axios from "axios";
+import { REACT_APP_BASE_URL } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Item {
   flag: string;
@@ -45,12 +48,11 @@ interface RenderItemProps {
   item: Item;
 }
 
-
 const initialState = {
   inputValues: {
     fullName: "John Doe",
     email: "example@gmail.com",
-    nickname:  "",
+    nickname: "",
     phoneNumber: "",
   },
   inputValidities: {
@@ -65,8 +67,7 @@ const initialState = {
 // edit profile screen
 const EditProfile = () => {
   const params = useLocalSearchParams();
-  const isFirstTimeUser = params.isSignup === "true";
-  const [showWelcomeModal, setShowWelcomeModal] = useState(isFirstTimeUser);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState(
     Array.isArray(params.email) ? params.email[0] || "" : params.email || ""
@@ -87,6 +88,43 @@ const EditProfile = () => {
   const { dark, colors } = useTheme();
   const router = useRouter();
 
+  useEffect(() => {
+    checkUserStatus();
+  }, []);
+
+  const checkUserStatus = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem("accessToken");
+      if (!accessToken) {
+        console.error("No access token found");
+        return;
+      }
+
+      const response = await axios.get(
+        `${REACT_APP_BASE_URL}/api/v1/users/me/`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      // If user has no name, email, or profile, they are considered new
+      const isNewUser =
+        !response.data.name || !response.data.email || !response.data.profile;
+      setShowWelcomeModal(isNewUser);
+
+      // Update state with user data if available
+      if (response.data.name) setName(response.data.name);
+      if (response.data.email) setEmail(response.data.email);
+      if (response.data.phone_number)
+        setPhone(response.data.phone_number.replace("+91", ""));
+    } catch (error) {
+      console.error("Error checking user status:", error);
+      Alert.alert("Error", "Failed to fetch user data. Please try again.");
+    }
+  };
+
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -97,14 +135,18 @@ const EditProfile = () => {
     return phoneRegex.test(phone);
   };
 
-  const handleWelcomeSubmit = () => {
+  const handleWelcomeSubmit = async () => {
     if (!name.trim()) {
       setValidationError("Please enter your name");
       return;
     }
 
-    const hasEmail = Array.isArray(params.email) ? params.email.length > 0 : Boolean(params.email);
-    const hasPhone = Array.isArray(params.phone) ? params.phone.length > 0 : Boolean(params.phone);
+    const hasEmail = Array.isArray(params.email)
+      ? params.email.length > 0
+      : Boolean(params.email);
+    const hasPhone = Array.isArray(params.phone)
+      ? params.phone.length > 0
+      : Boolean(params.phone);
 
     if (!hasEmail && !email) {
       setValidationError("Please enter your email address");
@@ -126,9 +168,33 @@ const EditProfile = () => {
       return;
     }
 
-    setValidationError("");
-    setShowWelcomeModal(false);
-    // Here you would typically save the data to your backend
+    try {
+      const accessToken = await AsyncStorage.getItem("accessToken");
+      if (!accessToken) {
+        throw new Error("No access token found");
+      }
+
+      // Update user profile
+      await axios.patch(
+        `${REACT_APP_BASE_URL}/api/v1/users/me/`,
+        {
+          name: name,
+          email: email || undefined,
+          phone_number: phone ? `+91${phone}` : undefined,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      setValidationError("");
+      setShowWelcomeModal(false);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      Alert.alert("Error", "Failed to update profile. Please try again.");
+    }
   };
 
   const renderWelcomeModal = () => (
@@ -139,8 +205,9 @@ const EditProfile = () => {
       onRequestClose={() => {}}
     >
       <View style={styles.modalOverlay}>
-        <View style={[styles.modalContent, { backgroundColor: colors.background }]}>
-
+        <View
+          style={[styles.modalContent, { backgroundColor: colors.background }]}
+        >
           <MaterialIcons
             name="account-circle"
             size={48}
@@ -154,13 +221,14 @@ const EditProfile = () => {
 
           <View style={styles.contentContainer}>
             <Text style={[styles.modalSubtitle, { color: colors.text }]}>
-              {(!params.email || (Array.isArray(params.email) && params.email.length === 0)) || 
-               (!params.phone || (Array.isArray(params.phone) && params.phone.length === 0))
-                ? "Please complete your profile" 
-                : "We're excited to have you on board. Please tell us your name to get started."
-              }
+              {!params.email ||
+              (Array.isArray(params.email) && params.email.length === 0) ||
+              !params.phone ||
+              (Array.isArray(params.phone) && params.phone.length === 0)
+                ? "Please complete your profile"
+                : "We're excited to have you on board. Please tell us your name to get started."}
             </Text>
-            
+
             <Input
               id="fullName"
               placeholder="Enter your full name"
@@ -171,7 +239,8 @@ const EditProfile = () => {
               autoCapitalize="words"
             />
 
-            {(!params.email || (Array.isArray(params.email) && params.email.length === 0)) && (
+            {(!params.email ||
+              (Array.isArray(params.email) && params.email.length === 0)) && (
               <Input
                 id="email"
                 placeholder="Enter your email address"
@@ -185,7 +254,8 @@ const EditProfile = () => {
               />
             )}
 
-            {(!params.phone || (Array.isArray(params.phone) && params.phone.length === 0)) && (
+            {(!params.phone ||
+              (Array.isArray(params.phone) && params.phone.length === 0)) && (
               <Input
                 id="phone"
                 placeholder="Enter your phone number"
@@ -496,7 +566,9 @@ const EditProfile = () => {
           style={styles.continueButton}
           onPress={() => {
             if (validateAadhar()) {
-              console.log("Aadhar number is valid, proceeding to OTP verification");
+              console.log(
+                "Aadhar number is valid, proceeding to OTP verification"
+              );
               router.replace("/otpverification_kyc");
             }
           }}
@@ -686,12 +758,12 @@ const styles = StyleSheet.create({
     color: "#111",
   },
   errorText: {
-    color: COLORS.error || 'red',
+    color: COLORS.error || "red",
     fontSize: 12,
     marginTop: 4,
     marginLeft: 4,
-    textAlign: 'center',
-    width: '100%',
+    textAlign: "center",
+    width: "100%",
   },
   inputBtn: {
     borderWidth: 1,

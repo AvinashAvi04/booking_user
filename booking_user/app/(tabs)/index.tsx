@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -13,17 +13,18 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SIZES, FONTS, COLORS } from "../../constants/theme";
-import {
-  OneWayForm,
-  RoundTripForm,
-  LocalForm,
-  AirportForm,
-} from "../../components/BookingForms";
+import AirportForm from "@/components/BookingForms/AirportForm";
+import LocalForm from "@/components/BookingForms/LocalForm";
+import OneWayForm from "@/components/BookingForms/OneWayForm";
+import RoundTripForm from "@/components/BookingForms/RoundTripForm";
 import { useTheme } from "@/theme/ThemeProvider";
 import Button from "../../components/Button";
 import Input from "@/components/Input";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { icons } from "@/constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { REACT_APP_BASE_URL } from "@env";
 
 type ThemeColors = {
   primary: string;
@@ -38,38 +39,116 @@ type TabType = "oneWay" | "roundTrip" | "local" | "airport";
 
 const BookingForm = () => {
   const { userType, isSignup, phone, email } = useLocalSearchParams();
-  const isFirstTimeUser = isSignup === "true";
   const [activeTab, setActiveTab] = useState<TabType>("oneWay");
-  const [showWelcomeModal, setShowWelcomeModal] =
-    useState<boolean>(isFirstTimeUser);
+  const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
   const [userPhone, setUserPhone] = useState<string>("");
   const [userEmail, setUserEmail] = useState<string>("");
+  const [nameError, setNameError] = useState<string>("");
+  const [phoneError, setPhoneError] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
   const { colors } = useTheme() as { colors: ThemeColors };
   const styles = createStyles(colors);
+  const [isPhoneNumberLogin, setIsPhoneNumberLogin] = useState<boolean>(false);
 
   const handleWelcomeSubmit = () => {
-    if (!userName.trim() || (email ? !userPhone.trim() : !userEmail.trim())) {
-      Alert.alert(
-        "Required Fields Missing",
-        `Please enter your ${!userName.trim() ? "name" : ""}${
-          !userName.trim() && (email ? !userPhone.trim() : !userEmail.trim())
-            ? " and "
-            : ""
-        }${
-          email
-            ? !userPhone.trim()
-              ? "phone number"
-              : ""
-            : !userEmail.trim()
-            ? "email"
-            : ""
-        } to continue`
-      );
-      return;
+    let hasError = false;
+
+    // Reset all errors
+    setNameError("");
+    setPhoneError("");
+    setEmailError("");
+
+    // Validate name
+    if (!userName.trim()) {
+      setNameError("Name is required");
+      hasError = true;
     }
-    setShowWelcomeModal(false);
+
+    // Validate based on login type
+    if (isPhoneNumberLogin) {
+      if (!userEmail.trim()) {
+        setEmailError("Email is required");
+        hasError = true;
+      }
+    } else {
+      if (!userPhone.trim()) {
+        setPhoneError("Phone number is required");
+        hasError = true;
+      }
+    }
+
+    if (!hasError) {
+      handleUpdateUserDetails();
+    }
   };
+
+  const handleGetUserDetails = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem("accessToken");
+      if (!accessToken) {
+        console.log("No access token found");
+        return;
+      }
+
+      const response = await axios.get(
+        REACT_APP_BASE_URL + "/api/v1/users/me/",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      const { name, email, phone_number } = response.data;
+
+      // Check if any of the required fields are empty
+      if (!name || !email || !phone_number) {
+        setShowWelcomeModal(true);
+      }
+      if (phone_number) {
+        setIsPhoneNumberLogin(true);
+      } else {
+        setIsPhoneNumberLogin(false);
+      }
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  };
+
+  const handleUpdateUserDetails = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem("accessToken");
+      if (!accessToken) {
+        console.log("No access token found");
+        return;
+      }
+
+      const response = await axios.patch(
+        REACT_APP_BASE_URL + "/api/v1/users/me/",
+        {
+          name: userName,
+          email: isPhoneNumberLogin ? userEmail : "",
+          phone_number: !isPhoneNumberLogin ? userPhone : "",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setShowWelcomeModal(false);
+      }
+    } catch (error) {
+      console.error("Error updating user details:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetUserDetails();
+  }, []); // Empty dependency array means this runs once on mount
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -157,31 +236,47 @@ const BookingForm = () => {
               placeholder="Enter your name"
               placeholderTextColor={colors.textSecondary || colors.text}
               value={userName}
-              onInputChanged={(id, text) => setUserName(text)}
-              autoFocus
-              style={styles.input}
-              icon={icons.user}
-            />
-            <Input
-              id={email ? "phone" : "email"}
-              placeholder={
-                email ? "Enter your phone number" : "Enter your email"
-              }
-              placeholderTextColor={colors.textSecondary || colors.text}
-              value={email ? userPhone : userEmail}
               onInputChanged={(id, text) => {
-                if (email) {
-                  setUserPhone(text);
-                } else {
-                  setUserEmail(text);
-                }
+                setUserName(text);
+                setNameError("");
               }}
               autoFocus
               style={styles.input}
-              keyboardType={email ? "phone-pad" : "email-address"}
-              autoCapitalize="none"
-              icon={email ? icons.call : icons.email}
+              icon={icons.user}
+              errorText={nameError ? [nameError] : undefined}
             />
+            {isPhoneNumberLogin ? (
+              <Input
+                id="email"
+                placeholder="Enter your email"
+                placeholderTextColor={colors.textSecondary || colors.text}
+                value={userEmail}
+                onInputChanged={(id, text) => {
+                  setUserEmail(text);
+                  setEmailError("");
+                }}
+                style={styles.input}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                icon={icons.email}
+                errorText={emailError ? [emailError] : undefined}
+              />
+            ) : (
+              <Input
+                id="phone"
+                placeholder="Enter your phone number"
+                placeholderTextColor={colors.textSecondary || colors.text}
+                value={userPhone}
+                onInputChanged={(id, text) => {
+                  setUserPhone(text);
+                  setPhoneError("");
+                }}
+                style={styles.input}
+                keyboardType="phone-pad"
+                icon={icons.call}
+                errorText={phoneError ? [phoneError] : undefined}
+              />
+            )}
           </View>
 
           <Button
@@ -294,7 +389,8 @@ const createStyles = (colors: ThemeColors) =>
     },
     submitButton: {
       width: "100%",
-      marginTop: SIZES.padding2,
+      marginTop: SIZES.padding3,
+      // marginBottom: SIZES.padding1,
     },
 
     inputContainer: {

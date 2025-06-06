@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Car Body -->
+    <path
+        d="M8 24C8 22.8954 8.89543 22 10 22H30C31.1046 22 32 22.8954 32 24V28C32 29.1046 31.1046 30 30 30H10C8.89543 30 8 29.1046 8 28V24Z"
+        fill="#4A90E2" />
+
+    <!-- Car Top -->
+    <path d="M12 18H28V22H12V18Z" fill="#4A90E2" />
+
+    <!-- Windows -->
+    <path d="M14 20H26V22H14V20Z" fill="#E8F4FF" />
+
+    <!-- Wheels -->
+    <circle cx="14" cy="28" r="3" fill="#333333" />
+    <circle cx="26" cy="28" r="3" fill="#333333" />
+
+    <!-- Headlights -->
+    <path d="M10 24H12V26H10V24Z" fill="#FFD700" />
+    <path d="M28 24H30V26H28V24Z" fill="#FFD700" />
+
+    <!-- Sedan Specific Details -->
+    <path d="M16 18H24V20H16V18Z" fill="#4A90E2" />
+    <path d="M18 20H22V22H18V20Z" fill="#E8F4FF" />
+</svg> 
